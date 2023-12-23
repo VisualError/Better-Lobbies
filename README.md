@@ -27,3 +27,5 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 
 # Version 1.0.0
 - Initial release.
+# Version 1.0.1
+- changed mod description.
