@@ -22,7 +22,7 @@ Note: This mod doesn't fix the "An error occured" issues.
 
 ## Support and Feedback
 
-If you encounter any issues or have suggestions for improvement, feel free to [report them on GitHub](https://github.com/VisualError/BetterLobbies/issues). If you enjoy the mod, consider supporting the developer by [buying them a coffee on Ko-fi](https://ko-fi.com/ryokune) 
+If you encounter any issues or have suggestions for improvement, feel free to [report them on GitHub](https://github.com/VisualError/Better-Lobbies/issues). If you enjoy the mod, consider supporting the developer by [buying them a coffee on Ko-fi](https://ko-fi.com/ryokune) 
 
 
 # Version 1.0.0
