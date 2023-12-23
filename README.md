@@ -3,6 +3,7 @@
 ## Overview
 
 Enhance your multiplayer experience by having additional lobby related QoL features in game!
+Note: This mod doesn't fix the "An error occured" issues.
 
 ## Features
 
