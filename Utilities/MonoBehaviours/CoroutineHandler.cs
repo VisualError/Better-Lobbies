@@ -37,7 +37,7 @@ namespace Better_Lobbies.Utilities.MonoBehaviours
             }
             else
             {
-                BetterLobbiesBase.Logger.LogWarning($"Coroutine {coroutine.GetType().FullName} is already running");
+                Plugin.Logger.LogWarning($"Coroutine {coroutine.GetType().FullName} is already running");
             }
         }
 

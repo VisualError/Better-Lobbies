@@ -19,6 +19,7 @@ namespace Better_Lobbies.Patches
 			if (!NetworkManager.Singleton.IsConnectedClient)
 			{
 				Object.FindObjectOfType<MenuManager>().SetLoadingScreen(false, RoomEnter.Error, "Failed to connect to lobby!\nConnection was not approved!");
+				
 			}
 		}
 
@@ -28,12 +29,12 @@ namespace Better_Lobbies.Patches
 		{
 			if (NetworkManager.Singleton == null)
 			{
-				BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null");
 			}
 			Friend[] array = GameNetworkManager.Instance.currentLobby.Value.Members.ToArray();
 			if (array == null)
 			{
-				BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "currentlobby members does not exist for some reason");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "currentlobby members does not exist for some reason");
 			}
 			return true;
 		}
@@ -47,7 +48,7 @@ namespace Better_Lobbies.Patches
 
 		private static void SteamMatchmaking_OnLobbyEntered(Lobby obj)
 		{
-			BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "Entered lobby successfully!");
+			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Entered lobby successfully!");
 		}
 
 		[HarmonyPatch(typeof(NetworkConnectionManager), "HandleConnectionApproval")]
@@ -56,11 +57,11 @@ namespace Better_Lobbies.Patches
 		{
 			if (!response.Approved)
 			{
-				BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "connection not approved!");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "connection not approved!");
 			}
 			else
 			{
-				BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "connection approved!");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "connection approved!");
 			}
 			return true;
 		}
@@ -69,7 +70,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool asdd()
 		{
-			BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "SendConnectionRequest method called!");
+			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "SendConnectionRequest method called!");
 			return true;
 		}
 
@@ -77,7 +78,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool weee(ref ConnectionRequestMessage connectionRequestMessage, ref NetworkContext context)
 		{
-			BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "approval called!");
+			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "approval called!");
 			return true;
 		}
 
@@ -85,7 +86,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool ClientDisconnected()
 		{
-			BetterLobbiesBase.Logger.Log(BepInEx.Logging.LogLevel.All, "ClientDisconnected called!");
+			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "ClientDisconnected called!");
 			return true;
 		}
 

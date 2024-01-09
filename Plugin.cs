@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Bootstrap;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using Better_Lobbies.Patches;
 using HarmonyLib;
@@ -10,10 +11,11 @@ namespace Better_Lobbies
     [BepInProcess("Lethal Company.exe")]
     [BepInDependency("BiggerLobby", BepInDependency.DependencyFlags.SoftDependency)]
     [BepInDependency("Ryokune.CompatibilityChecker", BepInDependency.DependencyFlags.SoftDependency)]
-    internal class BetterLobbiesBase : BaseUnityPlugin
+    internal class Plugin : BaseUnityPlugin
     {
         internal static new ManualLogSource Logger;
-        internal static BetterLobbiesBase Instance;
+        internal static Plugin Instance;
+        internal ConfigEntry<bool> CensorLobbyNames;
         private readonly Harmony Harmony = new Harmony(PluginInfo.PLUGIN_GUID);
 
         private void Awake()
@@ -21,6 +23,9 @@ namespace Better_Lobbies
             // Plugin startup logic
             Instance = this;
             Logger = base.Logger;
+
+            //Config
+            CensorLobbyNames = Config.Bind("Lobby List", "Censor Lobby Names", true, "Censor offensive lobby names?");
 
             if (!Chainloader.PluginInfos.ContainsKey("Ryokune.CompatibilityChecker"))
             {

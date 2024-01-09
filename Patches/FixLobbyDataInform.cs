@@ -15,6 +15,14 @@ namespace Better_Lobbies.Patches
     // TODO: Add more information for lobby disconnection issues
     internal class FixLobbyDataInform
     {
+
+		[HarmonyPatch(typeof(SteamLobbyManager), nameof(SteamLobbyManager.OnEnable))]
+		[HarmonyPostfix]
+		static void OffensiveNames(SteamLobbyManager __instance)
+        {
+			__instance.censorOffensiveLobbyNames = Plugin.Instance.CensorLobbyNames.Value; 
+        }
+
 		// TODO: Add join friend notification.
 		[HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyInvite")]
 		[HarmonyPrefix]

@@ -32,7 +32,7 @@ namespace Better_Lobbies.Patches
                 }
                 catch (Exception err)
                 {
-                    BetterLobbiesBase.Logger.LogError(err);
+                    Plugin.Logger.LogError(err);
                 }
             }
         }

@@ -25,7 +25,7 @@ namespace Better_Lobbies.Utilities.Coroutines
                 textMesh.text = "(Copied to clipboard!)";
                 string id = GameNetworkManager.Instance.currentLobby.Value.Id.ToString();
                 GUIUtility.systemCopyBuffer = id;
-                BetterLobbiesBase.Logger.LogWarning("Lobby code copied to clipboard: " + id);
+                Plugin.Logger.LogWarning("Lobby code copied to clipboard: " + id);
             }
             else
             {
@@ -78,37 +78,19 @@ namespace Better_Lobbies.Utilities.Coroutines
             }
             catch(Exception ex)
             {
-                BetterLobbiesBase.Logger.LogError(ex);
+                Plugin.Logger.LogError(ex);
             }
         }
 
         internal static IEnumerator modifiedLoadLobbyIEnumerator(SteamLobbyManager __instance, Lobby[] ___currentLobbyList, float ___lobbySlotPositionOffset)
         {
             string[] offensiveWords = new string[]
-            {
-            "nigger",
-            "faggot",
-            "n1g",
-            "nigers",
-            "cunt",
-            "pussies",
-            "pussy",
-            "minors",
-            "chink",
-            "buttrape",
-            "molest",
-            "rape",
-            "coon",
-            "negro",
-            "beastiality",
-            "cocks",
-            "cumshot",
-            "ejaculate",
-            "pedophile",
-            "furfag",
-            "necrophilia"
-            };
-            foreach(Lobby currentLobby in ___currentLobbyList)
+        {
+            "nigger", "faggot", "n1g", "nigers", "cunt", "pussies", "pussy", "minors", "chink", "buttrape",
+            "molest", "rape", "coon", "negro", "beastiality", "cocks", "cumshot", "ejaculate", "pedophile", "furfag",
+            "necrophilia", "yiff", "sex"
+        };
+            foreach (Lobby currentLobby in ___currentLobbyList)
             {
                 List<Friend> blockedUsers = SteamFriends.GetBlocked().ToList();
                 if (blockedUsers != null)
@@ -134,14 +116,24 @@ namespace Better_Lobbies.Utilities.Coroutines
                             }
                         }
                     }
-                    GameObject gameObject = Object.Instantiate(__instance.LobbySlotPrefab, __instance.levelListContainer);
-                    gameObject.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, ___lobbySlotPositionOffset);
+                    GameObject gameObject;
+                    if (currentLobby.GetData("chal") == "t")
+                    {
+                        gameObject = __instance.LobbySlotPrefabChallenge;
+                    }
+                    else
+                    {
+                        gameObject = __instance.LobbySlotPrefab;
+                    }
+                    GameObject gameObject2 = Object.Instantiate(gameObject, __instance.levelListContainer);
+                    gameObject2.GetComponent<RectTransform>().anchoredPosition = new Vector2(0f, ___lobbySlotPositionOffset);
                     ___lobbySlotPositionOffset -= 42f;
-                    LobbySlot componentInChildren = gameObject.GetComponentInChildren<LobbySlot>();
+                    LobbySlot componentInChildren = gameObject2.GetComponentInChildren<LobbySlot>();
                     componentInChildren.LobbyName.text = lobbyName.Substring(0, Mathf.Min(lobbyName.Length, 40));
-                    componentInChildren.playerCount.text = string.Format("{0} / 4", currentLobby.MemberCount);
+                    componentInChildren.playerCount.text = string.Format("{0} / {1}", currentLobby.MemberCount, currentLobby.MaxMembers);
                     componentInChildren.lobbyId = currentLobby.Id;
                     componentInChildren.thisLobby = currentLobby;
+                    lobbyName = null;
                 }
             }
             yield break;

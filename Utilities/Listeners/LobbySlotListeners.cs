@@ -8,7 +8,7 @@ namespace Better_Lobbies.Utilities.Listeners
         {
             string lobbyCode = slot.lobbyId.ToString();
             GUIUtility.systemCopyBuffer = lobbyCode;
-            BetterLobbiesBase.Logger.LogInfo("Lobby code copied to clipboard: " + lobbyCode);
+            Plugin.Logger.LogInfo("Lobby code copied to clipboard: " + lobbyCode);
         }
     }
 }
