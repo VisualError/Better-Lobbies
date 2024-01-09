@@ -1,4 +1,4 @@
-# Better Lobbies
+# Better Lobbies [v47]
 
 ## Overview
 
@@ -29,3 +29,6 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Initial release.
 # Version 1.0.1
 - changed mod description.
+# Version 1.0.2
+- v47 compatibility.
+- fixed challenge moons not showing up
