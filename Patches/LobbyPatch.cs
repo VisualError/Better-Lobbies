@@ -33,11 +33,18 @@ namespace Better_Lobbies.Patches
         [HarmonyPostfix]
         public static void GameNetworkMangerAwakePatch()
         {
-            GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume");
+            GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
+            GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
             if (ResumeObj != null)
             {
                 GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, ResumeObj.transform.parent);
-                LobbyCodeObj.GetComponent<RectTransform>().anchoredPosition += new Vector2(0f, 182f);
+                RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
+                var anchoredPosition = rect.anchoredPosition + new Vector2(0f, 182f);
+                if (DebugMenu != null)
+                {
+                    DebugMenu.gameObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(240f, 0f);
+                }
+                rect.anchoredPosition = anchoredPosition;
                 TextMeshProUGUI LobbyCodeTextMesh = LobbyCodeObj.GetComponentInChildren<TextMeshProUGUI>();
                 LobbyCodeTextMesh.text = "> Lobby Code";
                 Button LobbyCodeButton = LobbyCodeObj.GetComponent<Button>();

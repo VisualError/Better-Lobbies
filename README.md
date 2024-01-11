@@ -32,3 +32,6 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 # Version 1.0.2
 - v47 compatibility.
 - fixed challenge moons not showing up
+# Version 1.0.3
+- still works with v49 wow.
+- fixed dev menu from [LethalDevMode](https://thunderstore.io/c/lethal-company/p/megumin/LethalDevMode/) and copy lobby code button overlapping each other.
