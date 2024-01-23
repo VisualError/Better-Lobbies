@@ -38,3 +38,6 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 # Version 1.0.4
 - Added Crew Count (@1A3Dev) (https://github.com/VisualError/Better-Lobbies/pull/4)
 - Fixed Debug Menu Overlapping Player List (@1A3Dev) (https://github.com/VisualError/Better-Lobbies/pull/3)
+
+## Contributors
+- @1A3Dev
