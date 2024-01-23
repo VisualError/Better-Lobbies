@@ -57,6 +57,21 @@ namespace Better_Lobbies.Patches
         [HarmonyPostfix]
         private static void OpenQuickMenu()
         {
+            AddLobbyCodeButton();
+            AddCrewCount();
+        }
+
+        private static void AddCrewCount()
+        {
+            TextMeshProUGUI CrewHeaderText = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
+            if (CrewHeaderText != null)
+            {
+                CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):";
+            }
+        }
+
+        private static void AddLobbyCodeButton()
+        {
             GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
             GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
             if (ResumeObj != null && PlayerListObj != null && GameObject.Find("CopyLobbyCode") != null)
@@ -77,18 +92,6 @@ namespace Better_Lobbies.Patches
                     rect.localPosition = resumeRect.localPosition + new Vector3(0f, 182f, 0f);
                     rect.localScale = resumeRect.localScale;
                 }
-            }
-        }
-
-
-        [HarmonyPatch(typeof(QuickMenuManager), "OpenQuickMenu")]
-        [HarmonyPostfix]
-        private static void OpenQuickMenu()
-        {
-            TextMeshProUGUI CrewHeaderText = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
-            if (CrewHeaderText != null)
-            {
-                CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):";
             }
         }
     }

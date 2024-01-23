@@ -1,4 +1,4 @@
-# Better Lobbies [v47]
+# Better Lobbies [v49]
 
 ## Overview
 
@@ -35,3 +35,6 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 # Version 1.0.3
 - still works with v49 wow.
 - fixed dev menu from [LethalDevMode](https://thunderstore.io/c/lethal-company/p/megumin/LethalDevMode/) and copy lobby code button overlapping each other.
+# Version 1.0.4
+- Added Crew Count (@1A3Dev) (https://github.com/VisualError/Better-Lobbies/pull/4)
+- Fixed Debug Menu Overlapping Player List (@1A3Dev) (https://github.com/VisualError/Better-Lobbies/pull/3)
