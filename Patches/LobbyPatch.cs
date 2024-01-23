@@ -29,27 +29,54 @@ namespace Better_Lobbies.Patches
             return false;
         }
 
-        [HarmonyPatch(typeof(StartOfRound), "Awake")]
+        [HarmonyPatch(typeof(QuickMenuManager), "Start")]
         [HarmonyPostfix]
-        public static void GameNetworkMangerAwakePatch()
+        private static void QuickMenuStart()
         {
             GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
-            GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
-            if (ResumeObj != null)
+            GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
+            if (ResumeObj != null && PlayerListObj != null && GameObject.Find("CopyLobbyCode") == null)
             {
-                GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, ResumeObj.transform.parent);
-                RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
-                var anchoredPosition = rect.anchoredPosition + new Vector2(0f, 182f);
-                if (DebugMenu != null)
-                {
-                    DebugMenu.gameObject.GetComponent<RectTransform>().anchoredPosition += new Vector2(240f, 0f);
-                }
-                rect.anchoredPosition = anchoredPosition;
+                GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, PlayerListObj.transform);
+                LobbyCodeObj.name = "CopyLobbyCode";
+
                 TextMeshProUGUI LobbyCodeTextMesh = LobbyCodeObj.GetComponentInChildren<TextMeshProUGUI>();
                 LobbyCodeTextMesh.text = "> Lobby Code";
+
                 Button LobbyCodeButton = LobbyCodeObj.GetComponent<Button>();
-                LobbyCodeButton!.onClick = new Button.ButtonClickedEvent();
-                LobbyCodeButton!.onClick.AddListener(() => MenuLobbyCodeButtonListeners.OnClick(LobbyCodeTextMesh));
+                LobbyCodeButton.onClick = new Button.ButtonClickedEvent();
+                LobbyCodeButton.onClick.AddListener(() => MenuLobbyCodeButtonListeners.OnClick(LobbyCodeTextMesh));
+
+                RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
+                rect.localPosition = new Vector3(125f, 185f, 0f);
+                rect.localScale = new Vector3(1f, 1f, 1f);
+            }
+        }
+
+        [HarmonyPatch(typeof(QuickMenuManager), "OpenQuickMenu")]
+        [HarmonyPostfix]
+        private static void OpenQuickMenu()
+        {
+            GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
+            GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
+            if (ResumeObj != null && PlayerListObj != null && GameObject.Find("CopyLobbyCode") != null)
+            {
+                GameObject LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/CopyLobbyCode/");
+                RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
+                GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
+                if (DebugMenu != null && DebugMenu.activeSelf)
+                {
+                    LobbyCodeObj.transform.SetParent(PlayerListObj.transform);
+                    rect.localPosition = new Vector3(125f, 185f, 0f);
+                    rect.localScale = new Vector3(1f, 1f, 1f);
+                }
+                else
+                {
+                    LobbyCodeObj.transform.SetParent(ResumeObj.transform.parent);
+                    RectTransform resumeRect = ResumeObj.GetComponent<RectTransform>();
+                    rect.localPosition = resumeRect.localPosition + new Vector3(0f, 182f, 0f);
+                    rect.localScale = resumeRect.localScale;
+                }
             }
         }
     }
