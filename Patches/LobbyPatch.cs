@@ -79,5 +79,17 @@ namespace Better_Lobbies.Patches
                 }
             }
         }
+
+
+        [HarmonyPatch(typeof(QuickMenuManager), "OpenQuickMenu")]
+        [HarmonyPostfix]
+        private static void OpenQuickMenu()
+        {
+            TextMeshProUGUI CrewHeaderText = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
+            if (CrewHeaderText != null)
+            {
+                CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):";
+            }
+        }
     }
 }
