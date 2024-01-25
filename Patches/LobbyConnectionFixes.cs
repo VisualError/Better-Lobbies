@@ -10,19 +10,6 @@ namespace Better_Lobbies.Patches
 {
     class LobbyConnectionFixes
     {
-		[HarmonyPatch(typeof(GameNetworkManager))]
-		[HarmonyPatch("OnLocalClientConnectionDisapproved")]
-		[HarmonyPostfix]
-		static void OnLocalClientConnectionDisapproved()
-		{
-			if (NetworkManager.Singleton == null) return;
-			if (!NetworkManager.Singleton.IsConnectedClient)
-			{
-				Object.FindObjectOfType<MenuManager>().SetLoadingScreen(false, RoomEnter.Error, "Failed to connect to lobby!\nConnection was not approved!");
-				
-			}
-		}
-
 		[HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyMemberJoined")]
 		[HarmonyPrefix]
 		static bool a(ref Lobby lobby, ref Friend friend)
