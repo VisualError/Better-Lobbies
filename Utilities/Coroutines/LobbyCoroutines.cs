@@ -61,7 +61,7 @@ namespace Better_Lobbies.Utilities.Coroutines
                         ButtonComponent!.onClick = new Button.ButtonClickedEvent();
                         ButtonComponent!.onClick.AddListener(() => LobbySlotListeners.CopyLobbyCodeToClipboard(slot));
                     }
-                    if(!searchText.IsNullOrWhiteSpace() && !slot.LobbyName.text.Contains(searchText))
+                    if(!searchText.IsNullOrWhiteSpace() && !slot.LobbyName.text.Contains(searchText, StringComparison.OrdinalIgnoreCase))
                     {
                         i--;
                         Object.DestroyImmediate(slot.gameObject);

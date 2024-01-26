@@ -38,6 +38,10 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 # Version 1.0.4
 - Added Crew Count ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #4](https://github.com/VisualError/Better-Lobbies/pull/4)
 - Fixed Debug Menu Overlapping Player List ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #3](https://github.com/VisualError/Better-Lobbies/pull/3)
+# Version 1.0.5
+- Fixed some disconnect reasons being overwritten with "Failed to connect to lobby! Connection was not approved!" ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #7](https://github.com/VisualError/Better-Lobbies/pull/7)
+- Fixed errors on lobby code ui.
+- Search is no longer case-sensitive.
 
 ### Template `Better_Lobbies/Better_Lobbies.csproj.user`
 ```xml

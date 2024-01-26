@@ -34,10 +34,9 @@ namespace Better_Lobbies.Patches
         private static void QuickMenuStart()
         {
             GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
-            GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
-            if (ResumeObj != null && PlayerListObj != null && GameObject.Find("CopyLobbyCode") == null)
+            if (ResumeObj != null && GameObject.Find("CopyLobbyCode") == null)
             {
-                GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, PlayerListObj.transform);
+                GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, ResumeObj.transform.parent);
                 LobbyCodeObj.name = "CopyLobbyCode";
 
                 TextMeshProUGUI LobbyCodeTextMesh = LobbyCodeObj.GetComponentInChildren<TextMeshProUGUI>();
@@ -48,8 +47,8 @@ namespace Better_Lobbies.Patches
                 LobbyCodeButton.onClick.AddListener(() => MenuLobbyCodeButtonListeners.OnClick(LobbyCodeTextMesh));
 
                 RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
-                rect.localPosition = new Vector3(125f, 185f, 0f);
-                rect.localScale = new Vector3(1f, 1f, 1f);
+                rect.localPosition = ResumeObj.transform.localPosition + new Vector3(0f, 182f, 0f);
+                rect.localScale = ResumeObj.transform.localScale;
             }
         }
 
@@ -76,16 +75,16 @@ namespace Better_Lobbies.Patches
             GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
             if (ResumeObj != null && PlayerListObj != null)
             {
-                GameObject LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/CopyLobbyCode/");
+                GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
+                GameObject LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/CopyLobbyCode/");
                 if(LobbyCodeObj == null)
                 {
                     LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/CopyLobbyCode/");
                 }
                 RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
-                GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
                 if (DebugMenu != null && DebugMenu.activeSelf)
                 {
-                    LobbyCodeObj.transform.SetParent(PlayerListObj.transform);
+                    LobbyCodeObj.transform.SetParent(DebugMenu.transform);
                     rect.localPosition = new Vector3(125f, 185f, 0f);
                     rect.localScale = new Vector3(1f, 1f, 1f);
                 }
