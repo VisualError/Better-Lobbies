@@ -39,7 +39,7 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Added Crew Count ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #4](https://github.com/VisualError/Better-Lobbies/pull/4)
 - Fixed Debug Menu Overlapping Player List ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #3](https://github.com/VisualError/Better-Lobbies/pull/3)
 
-### Template `Better Lobbies/Better Lobbies.csproj.user`
+### Template `Better_Lobbies/Better_Lobbies.csproj.user`
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
