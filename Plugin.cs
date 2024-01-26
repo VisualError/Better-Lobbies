@@ -29,7 +29,7 @@ namespace Better_Lobbies
 
             if (!Chainloader.PluginInfos.ContainsKey("Ryokune.CompatibilityChecker"))
             {
-                Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} is loaded!");
+                Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} v{PluginInfo.PLUGIN_VERSION} is loaded!");
                 Harmony.PatchAll(typeof(LobbyPatch));
                 Harmony.PatchAll(typeof(ServerListPatch));
             }

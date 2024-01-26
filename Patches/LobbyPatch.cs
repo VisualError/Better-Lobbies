@@ -57,7 +57,7 @@ namespace Better_Lobbies.Patches
         [HarmonyPostfix]
         private static void OpenQuickMenu()
         {
-            AddLobbyCodeButton();
+            AdjustLobbyCodeButton();
             AddCrewCount();
         }
 
@@ -70,13 +70,17 @@ namespace Better_Lobbies.Patches
             }
         }
 
-        private static void AddLobbyCodeButton()
+        private static void AdjustLobbyCodeButton()
         {
             GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
             GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
-            if (ResumeObj != null && PlayerListObj != null && GameObject.Find("CopyLobbyCode") != null)
+            if (ResumeObj != null && PlayerListObj != null)
             {
                 GameObject LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/CopyLobbyCode/");
+                if(LobbyCodeObj == null)
+                {
+                    LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/CopyLobbyCode/");
+                }
                 RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
                 GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
                 if (DebugMenu != null && DebugMenu.activeSelf)
