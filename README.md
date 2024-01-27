@@ -43,6 +43,7 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Fixed errors on lobby code ui.
 - Search is no longer case-sensitive.
 
+## Contributing
 ### Template `Better_Lobbies/Better_Lobbies.csproj.user`
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
