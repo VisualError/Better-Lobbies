@@ -1,8 +1,5 @@
-﻿using Better_Lobbies.Utilities.Coroutines;
-using Better_Lobbies.Utilities.Listeners;
-using Better_Lobbies.Utilities.MonoBehaviours;
+﻿using Better_Lobbies.Utilities.Listeners;
 using HarmonyLib;
-using Steamworks.Data;
 using System.Collections;
 using TMPro;
 using UnityEngine;
@@ -12,21 +9,42 @@ namespace Better_Lobbies.Patches
 {
     internal class LobbyPatch
     {
-        [HarmonyPatch(typeof(SteamLobbyManager), nameof(SteamLobbyManager.LoadServerList))]
-        [HarmonyPostfix]
-        [HarmonyAfter("me.swipez.melonloader.morecompany")]
-        public static void loadserverListPatch(ref SteamLobbyManager __instance)
-        {
-            CoroutineHandler.Instance.NewCoroutine(LobbyCoroutines.LoadServerList(__instance));
-        }
-
         [HarmonyPatch(typeof(SteamLobbyManager), "loadLobbyListAndFilter")]
-        [HarmonyAfter("me.swipez.melonloader.morecompany")]
-        [HarmonyPrefix]
-        public static bool loadLobbyPrefixPatch(ref SteamLobbyManager __instance, ref Lobby[] ___currentLobbyList, ref float ___lobbySlotPositionOffset, ref IEnumerator __result)
+        [HarmonyPostfix]
+        private static IEnumerator loadLobbyListAndFilter(IEnumerator result)
         {
-            __result = LobbyCoroutines.modifiedLoadLobbyIEnumerator(__instance, ___currentLobbyList, ___lobbySlotPositionOffset);
-            return false;
+            SteamLobbyManager lobbyManager = Object.FindFirstObjectByType<SteamLobbyManager>();
+            RectTransform rect = lobbyManager.levelListContainer.GetComponent<RectTransform>();
+            float newWidth = rect.sizeDelta.x;
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
+            float newHeight = Mathf.Max(0, 50 * 42f);
+            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
+
+            while (result.MoveNext())
+                yield return result.Current;
+
+            LobbySlot[] lobbySlots = Object.FindObjectsOfType<LobbySlot>();
+            foreach (LobbySlot lobbySlot in lobbySlots)
+            {
+                lobbySlot.playerCount.text = string.Format("{0} / {1}", lobbySlot.thisLobby.MemberCount, lobbySlot.thisLobby.MaxMembers);
+
+                GameObject JoinButton = lobbySlot.transform.Find("JoinButton")?.gameObject;
+                if (JoinButton != null)
+                {
+                    GameObject CopyCodeButton = Object.Instantiate(JoinButton, JoinButton.transform.parent);
+                    CopyCodeButton.name = "CopyCodeButton";
+                    RectTransform rectTransform = CopyCodeButton.GetComponent<RectTransform>();
+                    rectTransform!.anchoredPosition -= new Vector2(78f, 0f);
+                    CopyCodeButton.GetComponentInChildren<TextMeshProUGUI>().text = "Code";
+                    Button ButtonComponent = CopyCodeButton.GetComponent<Button>();
+                    ButtonComponent!.onClick = new Button.ButtonClickedEvent();
+                    ButtonComponent!.onClick.AddListener(() => LobbySlotListeners.CopyLobbyCodeToClipboard(lobbySlot));
+                    CopyCodeButton.SetActive(true);
+                }
+            }
+
+            newHeight = Mathf.Max(0, lobbySlots.Length * 42f);
+            rect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
         }
 
         [HarmonyPatch(typeof(QuickMenuManager), "Start")]
