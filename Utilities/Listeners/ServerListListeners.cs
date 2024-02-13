@@ -2,9 +2,10 @@
 using Better_Lobbies.Utilities.MonoBehaviours;
 using Steamworks.Data;
 using Steamworks;
+using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections;
-using System.Linq;
+using BepInEx;
 
 namespace Better_Lobbies.Utilities.Listeners
 {
@@ -25,24 +26,24 @@ namespace Better_Lobbies.Utilities.Listeners
         internal static IEnumerator JoinLobby(ulong lobbyId, SteamLobbyManager lobbyManager)
         {
             Plugin.Logger.LogWarning("Getting Lobby");
-            var joinTask = SteamMatchmaking.JoinLobbyAsync(lobbyId);
+            Task<Lobby?> joinTask = SteamMatchmaking.JoinLobbyAsync(lobbyId);
             yield return new WaitUntil(() => joinTask.IsCompleted);
             if (!joinTask.Result.HasValue)
             {
-                Plugin.Logger.LogWarning("Failed to get lobby. Join task had no value.");
+                Plugin.Logger.LogWarning("Failed to join lobby.");
                 lobbyManager.LoadServerList();
                 yield break;
             }
             Plugin.Logger.LogWarning("Getting Lobby Value");
             Lobby lobby = joinTask.Result.Value;
-            if (joinTask.Result.Value.Data.Any())
+            if (lobby.GetData("vers").IsNullOrWhiteSpace())
             {
-                Plugin.Logger.LogWarning($"Failed to join lobby {lobbyId}. Searching instead.");
+                Plugin.Logger.LogWarning($"Failed to join lobby code: {lobbyId}");
                 lobbyManager.LoadServerList();
                 yield break;
             }
             LobbySlot.JoinLobbyAfterVerifying(lobby, lobby.Id);
-            Plugin.Logger.LogWarning("Successfully joined lobby using lobby code!");
+            Plugin.Logger.LogWarning($"Successfully joined {lobby.GetData("name") ?? "a lobby"} using lobby code!");
             ServerListPatch.searchInputField.text = "";
         }
     }

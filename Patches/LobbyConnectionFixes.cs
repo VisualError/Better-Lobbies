@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Steamworks;
 using Steamworks.Data;
+using System.Collections.Generic;
 using System.Linq;
 using Unity.Netcode;
 
@@ -8,24 +9,26 @@ namespace Better_Lobbies.Patches
 {
     class LobbyConnectionFixes
     {
-		[HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyMemberJoined")]
+        internal static Lobby? previousLobby;
+
+        [HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyMemberJoined")]
 		[HarmonyPrefix]
-		static bool a(ref Lobby lobby, ref Friend friend)
+		static bool SteamMatchmaking_OnLobbyMemberJoined(ref Lobby lobby, ref Friend friend)
 		{
 			if (NetworkManager.Singleton == null)
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null.");
 			}
-			Friend[] array = GameNetworkManager.Instance.currentLobby.Value.Members.ToArray();
-			if (array == null)
+			List<Friend> membersList = GameNetworkManager.Instance.currentLobby.Value.Members.ToList();
+			if (membersList == null)
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "currentlobby members does not exist for some reason");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "CurrentLobby members does not exist for some reason.");
 			}
 			return true;
 		}
 		[HarmonyPatch(typeof(GameNetworkManager), "OnEnable")]
 		[HarmonyPrefix]
-		static bool bruh()
+		static bool GameNetworkManager_Subscribe()
 		{
 			SteamMatchmaking.OnLobbyEntered += SteamMatchmaking_OnLobbyEntered;
 			return true;
@@ -34,26 +37,28 @@ namespace Better_Lobbies.Patches
 		private static void SteamMatchmaking_OnLobbyEntered(Lobby obj)
 		{
 			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Entered lobby successfully!");
-		}
+			previousLobby = obj;
+
+        }
 
 		[HarmonyPatch(typeof(NetworkConnectionManager), "HandleConnectionApproval")]
 		[HarmonyPrefix]
-		static bool asds(NetworkManager.ConnectionApprovalResponse response)
+		static bool HandleConnectionApproval(NetworkManager.ConnectionApprovalResponse response)
 		{
 			if (!response.Approved)
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "connection not approved!");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Connection not approved!");
 			}
 			else
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "connection approved!");
+				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Connection approved!");
 			}
 			return true;
 		}
 
 		[HarmonyPatch(typeof(NetworkConnectionManager), "SendConnectionRequest")]
 		[HarmonyPrefix]
-		static bool asdd()
+		static bool SendConnectionRequest()
 		{
 			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "SendConnectionRequest method called!");
 			return true;
@@ -61,7 +66,7 @@ namespace Better_Lobbies.Patches
 
 		[HarmonyPatch(typeof(NetworkConnectionManager), "ApproveConnection")]
 		[HarmonyPrefix]
-		static bool weee(ref ConnectionRequestMessage connectionRequestMessage, ref NetworkContext context)
+		static bool ApproveConnection(ref ConnectionRequestMessage connectionRequestMessage, ref NetworkContext context)
 		{
 			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "approval called!");
 			return true;
@@ -78,7 +83,7 @@ namespace Better_Lobbies.Patches
 
 		[HarmonyPatch(typeof(GameNetworkManager), "OnDisable")]
 		[HarmonyPrefix]
-		static bool bruh2()
+		static bool GameNetworkManager_Unsubscribe()
 		{
 			SteamMatchmaking.OnLobbyEntered -= SteamMatchmaking_OnLobbyEntered;
 			return true;

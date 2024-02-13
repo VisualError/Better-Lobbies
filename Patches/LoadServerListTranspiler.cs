@@ -42,7 +42,7 @@ namespace Better_Lobbies.Patches
                 AccessTools.Field(typeof(SteamLobbyManager), nameof(SteamLobbyManager.currentLobbyList));
 
             var FilterWithSearchMethod =
-                AccessTools.Method(typeof(LoadServerListTranspiler), nameof(FilterWithSearch));
+                AccessTools.Method(typeof(LoadServerListTranspiler), nameof(FilterAndSortLobbyList));
 
             var codeMatcher = new CodeMatcher(instructions, ilGenerator);
             codeMatcher
@@ -57,13 +57,37 @@ namespace Better_Lobbies.Patches
             return codeMatcher.InstructionEnumeration();
         }
 
-        private static Lobby[] FilterWithSearch(Lobby[] lobbyList) // i suck at naming methods
+        private static Lobby[] FilterAndSortLobbyList(Lobby[] lobbyList) // i suck at naming methods
         {
             var list = lobbyList.ToList();
             var searchText = ServerListPatch.searchInputField.text;
-            if (searchText.IsNullOrWhiteSpace()) return lobbyList; // Return the original lobby list because theres nothing to filter.
-            var filteredArray = list.Where(x => x.GetData("name").Contains(searchText, System.StringComparison.OrdinalIgnoreCase)).ToArray();
-            return filteredArray;
+            var filteredArray = lobbyList;
+            if (!searchText.IsNullOrWhiteSpace()) filteredArray = list.Where(x => x.GetData("name").Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToArray();
+            var insertedArray = InsertRejoinLobby(filteredArray); // Do this so you can rejoin private lobbies too.
+            var sortedArray = SortLobbyList(insertedArray);
+            return sortedArray;
+        }
+
+        private static Lobby[] InsertRejoinLobby(Lobby[] lobbyList)
+        {
+            List<Lobby> list = lobbyList.ToList();
+            if (LobbyConnectionFixes.previousLobby.HasValue)
+            {
+                if (lobbyList.Contains(LobbyConnectionFixes.previousLobby.Value)) return lobbyList;
+                list.Add(LobbyConnectionFixes.previousLobby.Value);
+                Plugin.Logger.LogWarning("Injecting private lobby to rejoinable");
+            }
+            return list.ToArray();
+        }
+
+        private static Lobby[] SortLobbyList(Lobby[] lobbyList)
+        {
+            if (!LobbyConnectionFixes.previousLobby.HasValue) return lobbyList;
+            var list = lobbyList.ToList();
+            var sortedList = lobbyList
+            .OrderByDescending(x => x.Id == LobbyConnectionFixes.previousLobby.Value.Id ? 1 : 0)
+            .ToArray();
+            return sortedList;
         }
     }
 }

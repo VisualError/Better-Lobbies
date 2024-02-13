@@ -32,20 +32,20 @@ namespace Better_Lobbies.Patches
 
             return new CodeMatcher(instructions)
                 
-                .MatchForward(false, new[] {
+                .MatchForward(false, [
                 new CodeMatch(OpCodes.Ldloc_1),
                 new CodeMatch(OpCodes.Ldfld, currentLobbyListField),
                 new CodeMatch(OpCodes.Ldarg_0),
                 new CodeMatch(inst => inst.opcode == OpCodes.Ldfld), // Compiler-generated field
                 new CodeMatch(OpCodes.Ldelem, typeof(Lobby)),
-                new CodeMatch(OpCodes.Stfld, thisLobbyField) })
+                new CodeMatch(OpCodes.Stfld, thisLobbyField) ])
                 .ThrowIfNotMatch("Unable to find LobbySlot.thisLobby line.")
-                .InsertAndAdvance(new[] {
-                new CodeInstruction(OpCodes.Dup) })
+                .InsertAndAdvance([
+                new CodeInstruction(OpCodes.Dup) ])
                 .Advance(6)
-                .InsertAndAdvance(new[] {
+                .InsertAndAdvance([
                 new CodeInstruction(OpCodes.Dup),
-                new CodeInstruction(OpCodes.Call, initializeLobbySlotMethod) })
+                new CodeInstruction(OpCodes.Call, initializeLobbySlotMethod) ])
                 .InstructionEnumeration();
         }
 
@@ -55,6 +55,7 @@ namespace Better_Lobbies.Patches
             var JoinButton = lobbySlot.GetComponentInChildren<Button>();
             if (JoinButton != null)
             {
+                InitializeJoinButton(lobbySlot, JoinButton);
                 var CopyCodeButton = Object.Instantiate(JoinButton, JoinButton.transform.parent);
                 CopyCodeButton.name = "CopyCodeButton";
                 RectTransform rectTransform = CopyCodeButton.GetComponent<RectTransform>();
@@ -64,6 +65,14 @@ namespace Better_Lobbies.Patches
                 CopyCodeButton!.onClick.m_PersistentCalls.Clear();
                 CopyCodeButton!.onClick.AddListener(() => LobbySlotListeners.CopyLobbyCodeToClipboard(lobbySlot, TextMesh));
             }
+        }
+
+        private void InitializeJoinButton(LobbySlot lobbySlot, Button joinButton)
+        {
+            if (!LobbyConnectionFixes.previousLobby.HasValue) return;
+            if (LobbyConnectionFixes.previousLobby.Value.Id != lobbySlot.thisLobby.Id) return;
+            var TextMesh = joinButton.GetComponentInChildren<TextMeshProUGUI>();
+            TextMesh.text = "Rejoin";
         }
 
         // TODO: Stop using GameObject.Find. Either cache the results or find a different way to programatically insert these into the UI.
