@@ -1,7 +1,6 @@
 ﻿using Better_Lobbies.Utilities.Listeners;
 using HarmonyLib;
 using Steamworks.Data;
-using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using TMPro;
@@ -77,7 +76,7 @@ namespace Better_Lobbies.Patches
 
         // TODO: Stop using GameObject.Find. Either cache the results or find a different way to programatically insert these into the UI.
         public static GameObject? QuickMenu;
-        [HarmonyPatch(typeof(QuickMenuManager), "Start")]
+        [HarmonyPatch(typeof(QuickMenuManager), nameof(QuickMenuManager.Start))]
         [HarmonyPostfix]
         private static void QuickMenuStart()
         {
@@ -102,17 +101,19 @@ namespace Better_Lobbies.Patches
             }
         }
 
-        [HarmonyPatch(typeof(QuickMenuManager), "OpenQuickMenu")]
+        [HarmonyPatch(typeof(QuickMenuManager), nameof(QuickMenuManager.OpenQuickMenu))]
         [HarmonyPostfix]
         private static void OpenQuickMenu()
         {
+            if (QuickMenu == null)
+                QuickMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/");
             AdjustLobbyCodeButton();
             AddCrewCount();
         }
 
         private static void AddCrewCount()
         {
-            TextMeshProUGUI? CrewHeaderText = GameObject.Find("/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI CrewHeaderText = QuickMenu!.transform.Find("PlayerList/Image/Header").GetComponentInChildren<TextMeshProUGUI>();
             if (CrewHeaderText != null)
             {
                 CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):";
@@ -121,9 +122,7 @@ namespace Better_Lobbies.Patches
 
         private static void AdjustLobbyCodeButton()
         {
-            if(QuickMenu == null)
-                QuickMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/");
-            GameObject? ResumeObj = QuickMenu.transform.Find("MainButtons/Resume/")?.gameObject;
+            GameObject? ResumeObj = QuickMenu!.transform.Find("MainButtons/Resume/")?.gameObject;
             if (ResumeObj != null)
             {
                 GameObject? DebugMenu = QuickMenu.transform.Find("DebugMenu")?.gameObject;
@@ -133,7 +132,7 @@ namespace Better_Lobbies.Patches
                 RectTransform? rect = LobbyCodeObj?.GetComponent<RectTransform>();
                 if (rect == null)
                 {
-                    Plugin.Logger.LogWarning("rect is null wtf");
+                    Plugin.Logger.LogWarning("Rect for LobbyCodeObj is null.");
                     return;
                 }
                 if (DebugMenu != null && DebugMenu.activeSelf)
