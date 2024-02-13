@@ -13,7 +13,7 @@ namespace Better_Lobbies.Patches
     [HarmonyPatch]
     [HarmonyPriority(Priority.First)]
     [HarmonyWrapSafe]
-    internal class LoadServerListTranspiler
+    internal class Transpiler_LoadServerList
     {
         // Taken from: https://github.com/MaxWasUnavailable/LobbyCompatibility/blob/master/LobbyCompatibility/Features/HarmonyHelper.cs#L21
         public static MethodInfo? GetAsyncInfo(Type type, string method)
@@ -42,7 +42,7 @@ namespace Better_Lobbies.Patches
                 AccessTools.Field(typeof(SteamLobbyManager), nameof(SteamLobbyManager.currentLobbyList));
 
             var FilterWithSearchMethod =
-                AccessTools.Method(typeof(LoadServerListTranspiler), nameof(FilterAndSortLobbyList));
+                AccessTools.Method(typeof(Transpiler_LoadServerList), nameof(FilterAndSortLobbyList));
 
             var codeMatcher = new CodeMatcher(instructions, ilGenerator);
             codeMatcher

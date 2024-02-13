@@ -32,7 +32,8 @@ namespace Better_Lobbies
                 Logger.LogInfo($"Plugin {PluginInfo.PLUGIN_GUID} v{PluginInfo.PLUGIN_VERSION} is loaded!");
                 Harmony.PatchAll(typeof(LobbyPatches));
                 Harmony.PatchAll(typeof(ServerListPatch));
-                Harmony.PatchAll(typeof(LoadServerListTranspiler));
+                Harmony.PatchAll(typeof(Transpiler_LoadServerList));
+                //Harmony.PatchAll(typeof(Transpiler_StartHost));
             }
             else if(Chainloader.PluginInfos.TryGetValue("Ryokune.CompatibilityChecker", out BepInEx.PluginInfo checker))
             {
