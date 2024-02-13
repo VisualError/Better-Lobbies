@@ -10,6 +10,7 @@ using System.Runtime.CompilerServices;
 
 namespace Better_Lobbies.Patches
 {
+    // keeping this just incase.
     [HarmonyPatch]
     [HarmonyPriority(Priority.First)]
     [HarmonyWrapSafe]
