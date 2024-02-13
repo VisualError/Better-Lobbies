@@ -2,10 +2,9 @@
 using Better_Lobbies.Utilities.MonoBehaviours;
 using Steamworks.Data;
 using Steamworks;
-using System.Threading.Tasks;
 using UnityEngine;
 using System.Collections;
-using BepInEx;
+using System.Linq;
 
 namespace Better_Lobbies.Utilities.Listeners
 {
@@ -22,31 +21,29 @@ namespace Better_Lobbies.Utilities.Listeners
             lobbyManager.LoadServerList();
         }
 
+        // this code sucks fr.
         internal static IEnumerator JoinLobby(ulong lobbyId, SteamLobbyManager lobbyManager)
         {
             Plugin.Logger.LogWarning("Getting Lobby");
-            Task<Lobby?> joinTask = SteamMatchmaking.JoinLobbyAsync(lobbyId);
+            var joinTask = SteamMatchmaking.JoinLobbyAsync(lobbyId);
             yield return new WaitUntil(() => joinTask.IsCompleted);
-            if (joinTask.Result.HasValue)
+            if (!joinTask.Result.HasValue)
             {
-                Plugin.Logger.LogWarning("Getting Lobby Value");
-                Lobby lobby = joinTask.Result.Value;
-                if (!lobby.GetData("vers").IsNullOrWhiteSpace())
-                {
-                    LobbySlot.JoinLobbyAfterVerifying(lobby, lobby.Id);
-                    Plugin.Logger.LogWarning("Success!");
-                    ServerListPatch.searchInputField.text = "";
-                }
-                else
-                {
-                    Plugin.Logger.LogWarning($"Failed to join lobby {lobbyId}");
-                    lobbyManager.LoadServerList();
-                }
+                Plugin.Logger.LogWarning("Failed to get lobby. Join task had no value.");
+                lobbyManager.LoadServerList();
+                yield break;
             }
-            else
+            Plugin.Logger.LogWarning("Getting Lobby Value");
+            Lobby lobby = joinTask.Result.Value;
+            if (joinTask.Result.Value.Data.Any())
             {
-                Plugin.Logger.LogWarning("Failed to join lobby.");
+                Plugin.Logger.LogWarning($"Failed to join lobby {lobbyId}. Searching instead.");
+                lobbyManager.LoadServerList();
+                yield break;
             }
+            LobbySlot.JoinLobbyAfterVerifying(lobby, lobby.Id);
+            Plugin.Logger.LogWarning("Successfully joined lobby using lobby code!");
+            ServerListPatch.searchInputField.text = "";
         }
     }
 }

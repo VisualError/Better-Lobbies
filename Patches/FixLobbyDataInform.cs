@@ -5,8 +5,6 @@ using System.Linq;
 using System.Reflection.Emit;
 using System;
 using Unity.Netcode;
-using Steamworks;
-using Steamworks.Data;
 
 namespace Better_Lobbies.Patches
 {

@@ -25,9 +25,9 @@ namespace Better_Lobbies.Patches
                     searchInputField = searchBoxObject.GetComponent<TMP_InputField>();
                     searchInputField.interactable = true;
                     searchInputField.placeholder.gameObject.GetComponent<TextMeshProUGUI>().text = "Search or Enter a room code...";
-                    searchInputField.onEndEdit = new TMP_InputField.SubmitEvent();
-                    searchInputField.onEndTextSelection = new TMP_InputField.TextSelectionEvent();
-                    searchInputField.onSubmit = new TMP_InputField.SubmitEvent();
+                    searchInputField.onEndEdit.m_PersistentCalls.Clear();
+                    searchInputField.onEndTextSelection.m_PersistentCalls.Clear();
+                    searchInputField.onSubmit.m_PersistentCalls.Clear();
                     searchInputField.onSubmit.AddListener(ServerListListeners.OnEndEdit);
                 }
                 catch (Exception err)

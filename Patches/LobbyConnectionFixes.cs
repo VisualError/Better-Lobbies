@@ -1,10 +1,8 @@
-﻿using GameNetcodeStuff;
-using HarmonyLib;
+﻿using HarmonyLib;
 using Steamworks;
 using Steamworks.Data;
 using System.Linq;
 using Unity.Netcode;
-using UnityEngine;
 
 namespace Better_Lobbies.Patches
 {

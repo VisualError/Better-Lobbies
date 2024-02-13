@@ -1,15 +1,17 @@
 ﻿using Better_Lobbies.Utilities.Listeners;
 using HarmonyLib;
 using Steamworks.Data;
+using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace Better_Lobbies.Patches
 {
-    internal class LobbyPatch
+    internal class LobbyPatches
     {
         // Taken from https://github.com/MaxWasUnavailable/LobbyCompatibility/blob/master/LobbyCompatibility/Patches/LoadLobbyListAndFilterTranspiler.cs#L22. Slightly modified.
         [HarmonyPatch(typeof(SteamLobbyManager), nameof(SteamLobbyManager.loadLobbyListAndFilter), MethodType.Enumerator)]
@@ -22,13 +24,14 @@ namespace Better_Lobbies.Patches
                 AccessTools.Field(typeof(LobbySlot), nameof(LobbySlot.thisLobby));
 
             var initializeLobbySlotMethod =
-                AccessTools.Method(typeof(LobbyPatch), nameof(InitializeLobbySlot));
+                AccessTools.Method(typeof(LobbyPatches), nameof(InitializeLobbySlot));
 
             // Does the following:
             // - Adds dup before last componentInChildren line to keep componentInChildren value on the stack
             // - Calls InitializeLobbySlot(lobbySlot)
-            
+
             return new CodeMatcher(instructions)
+                
                 .MatchForward(false, new[] {
                 new CodeMatch(OpCodes.Ldloc_1),
                 new CodeMatch(OpCodes.Ldfld, currentLobbyListField),
