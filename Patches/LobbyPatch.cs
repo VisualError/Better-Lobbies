@@ -63,6 +63,7 @@ namespace Better_Lobbies.Patches
             }
         }
 
+        // TODO: Stop using GameObject.Find. Either cache the results or find a different way to programatically insert these into the UI.
         [HarmonyPatch(typeof(QuickMenuManager), "Start")]
         [HarmonyPostfix]
         private static void QuickMenuStart()
@@ -110,7 +111,7 @@ namespace Better_Lobbies.Patches
             if (ResumeObj != null && PlayerListObj != null)
             {
                 GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
-                GameObject LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/CopyLobbyCode/");
+                GameObject LobbyCodeObj = DebugMenu.transform.Find("CopyLobbyCode").gameObject;
                 if(LobbyCodeObj == null)
                 {
                     LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/CopyLobbyCode/");
