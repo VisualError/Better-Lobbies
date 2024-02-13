@@ -57,8 +57,9 @@ namespace Better_Lobbies.Patches
             return codeMatcher.InstructionEnumeration();
         }
 
-        private static Lobby[] FilterAndSortLobbyList(Lobby[] lobbyList) // i suck at naming methods
+        private static Lobby[]? FilterAndSortLobbyList(Lobby[]? lobbyList) // i suck at naming methods
         {
+            if (lobbyList == null) return lobbyList;
             var list = lobbyList.ToList();
             var searchText = ServerListPatch.searchInputField.text;
             var filteredArray = lobbyList;
@@ -68,8 +69,9 @@ namespace Better_Lobbies.Patches
             return sortedArray;
         }
 
-        private static Lobby[] InsertRejoinLobby(Lobby[] lobbyList)
+        private static Lobby[]? InsertRejoinLobby(Lobby[]? lobbyList)
         {
+            if (lobbyList == null) return lobbyList;
             List<Lobby> list = lobbyList.ToList();
             if (LobbyConnectionFixes.previousLobby.HasValue)
             {
@@ -80,8 +82,9 @@ namespace Better_Lobbies.Patches
             return list.ToArray();
         }
 
-        private static Lobby[] SortLobbyList(Lobby[] lobbyList)
+        private static Lobby[]? SortLobbyList(Lobby[]? lobbyList)
         {
+            if (lobbyList == null) return lobbyList;
             if (!LobbyConnectionFixes.previousLobby.HasValue) return lobbyList;
             var list = lobbyList.ToList();
             var sortedList = lobbyList

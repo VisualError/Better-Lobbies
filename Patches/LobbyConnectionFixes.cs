@@ -47,6 +47,13 @@ namespace Better_Lobbies.Patches
 		{
             NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
         }
+
+		[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnDisable))]
+		[HarmonyPostfix]
+		static void DisconnectOnDisable()
+		{
+			GameNetworkManager.Instance.Disconnect(); // weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+		}
 		
 		private static void Singleton_OnClientConnectedCallback(ulong obj)
         {
@@ -98,7 +105,8 @@ namespace Better_Lobbies.Patches
         {
             Plugin.Logger.LogWarning("called!");
             if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)) yield break;
-            yield return new WaitUntil(() => NetworkManager.Singleton.ConnectedClientsIds.Contains(ownerClientId) && NetworkManager.Singleton.ConnectedClients[ownerClientId].IsConnected && StartOfRound.Instance != null && NetworkManager.Singleton.IsConnectedClient);
+            yield return new WaitUntil(() => NetworkManager.Singleton.ConnectedClientsIds.Contains(ownerClientId) && NetworkManager.Singleton.ConnectedClients[ownerClientId].IsConnected && StartOfRound.Instance != null);
+            Plugin.Logger.LogWarning("went by!");
             StartOfRound.Instance.OnClientConnect(ownerClientId);
             GameNetworkManager.Instance.connectedPlayers++;
             yield break;
