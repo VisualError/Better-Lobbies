@@ -44,7 +44,7 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Search is no longer case-sensitive.
 # Version 1.1.0
 - Added: Ability to rejoin last joined lobby.
-- ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/80c0fc31-91a3-45f6-ab6d-a37a5596c40b)
+![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/80c0fc31-91a3-45f6-ab6d-a37a5596c40b)
 - Fixed: Lotsa errors.
 - Changed: The way lobby list loading works.
 
