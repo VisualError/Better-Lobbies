@@ -22,7 +22,7 @@ namespace Better_Lobbies.Patches
         }
 
 		// TODO: Add join friend notification.
-		[HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyInvite")]
+		/*[HarmonyPatch(typeof(GameNetworkManager), "SteamMatchmaking_OnLobbyInvite")]
 		[HarmonyPrefix]
 		static bool SteamMatchmaking_OnLobbyInvite(ref GameNetworkManager __instance, ref Friend friend, ref Lobby lobby)
         {
@@ -35,11 +35,11 @@ namespace Better_Lobbies.Patches
             else
             {
 				// TODO: Add confirmation/deny button. Add a setting panel if notif should show up.
-				/*MenuManager menuManager = Object.FindObjectOfType<MenuManager>();
-				menuManager.DisplayMenuNotification($"You were inivted to a game!\n{text}", " [ Back ] ");*/
+				*//*MenuManager menuManager = Object.FindObjectOfType<MenuManager>();
+				menuManager.DisplayMenuNotification($"You were inivted to a game!\n{text}", " [ Back ] ");*//*
 			}
 			return false;
-        }
+        }*/
 
 		[HarmonyPatch(typeof(GameNetworkManager))]
 		[HarmonyPatch(nameof(GameNetworkManager.LobbyDataIsJoinable))]
