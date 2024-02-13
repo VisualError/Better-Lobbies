@@ -23,38 +23,46 @@ namespace Better_Lobbies.Utilities.MonoBehaviours
                 return instance;
             }
         }
+        private Dictionary<object, Dictionary<Type, IEnumerator>> objectsRunningCoroutines = new();
+        private Dictionary<Type, IEnumerator> runningCoroutines = new();
 
-        private List<Type> runningCoroutines = new List<Type>();
-
-        public void NewCoroutine(IEnumerator coroutine)
+        public IEnumerator NewCoroutine(object instance, IEnumerator coroutine, bool stopWhenRunning = false)
         {
-            // Check if the same IEnumerator instance is already running
-            if (!IsCoroutineRunning(coroutine.GetType()))
+            Type coroutineType = coroutine.GetType();
+            if (objectsRunningCoroutines.ContainsKey(instance) && objectsRunningCoroutines[instance].ContainsKey(coroutineType))
             {
-                // Start the coroutine and store the reference
-                runningCoroutines.Add(coroutine.GetType());
-                StartCoroutine(ExecuteCoroutine(coroutine));
+                if (stopWhenRunning)
+                {
+                    StopCoroutine(objectsRunningCoroutines[instance][coroutineType]);
+                    objectsRunningCoroutines[instance].Remove(coroutineType);
+                }
+                else
+                {
+                    Plugin.Logger.LogWarning($"Coroutine {coroutineType.Name} is already running for {instance}");
+                    return objectsRunningCoroutines[instance][coroutineType];
+                }
             }
-            else
+            if (!objectsRunningCoroutines.ContainsKey(instance))
             {
-                Plugin.Logger.LogWarning($"Coroutine {coroutine.GetType().FullName} is already running");
+                objectsRunningCoroutines[instance] = new Dictionary<Type, IEnumerator>();
             }
+            Plugin.Logger.LogWarning($"Starting coroutine {coroutineType.Name} for {instance}");
+            objectsRunningCoroutines[instance][coroutineType] = coroutine;
+            StartCoroutine(ExecuteCoroutine(instance, coroutine));
+            return objectsRunningCoroutines[instance][coroutineType];
         }
 
-        private bool IsCoroutineRunning(Type coroutine)
-        {
-            // Check if any IEnumerator in the list is equal to the given coroutine
-            return runningCoroutines.Any(runningCoroutine => runningCoroutine == coroutine);
-        }
-
-        private IEnumerator ExecuteCoroutine(IEnumerator coroutine)
+        private IEnumerator ExecuteCoroutine(object instance, IEnumerator coroutine)
         {
             yield return StartCoroutine(coroutine);
             // Remove the coroutine from the list when it's done
-            runningCoroutines.Remove(coroutine.GetType());
+            if (objectsRunningCoroutines.TryGetValue(instance, out Dictionary<Type, IEnumerator> value) && value != null)
+            {
+                value.Remove(coroutine.GetType());
+            }
         }
 
-        public new void StopAllCoroutines() 
+        public new void StopAllCoroutines()
         {
             base.StopAllCoroutines();
             runningCoroutines.Clear();

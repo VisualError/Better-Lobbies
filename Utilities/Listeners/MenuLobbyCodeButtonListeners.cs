@@ -9,7 +9,7 @@ namespace Better_Lobbies.Utilities.Listeners
     {
         internal static void OnClick(TextMeshProUGUI LobbyCodeTextMesh)
         {
-            CoroutineHandler.Instance.NewCoroutine(LobbyCoroutines.CopyCode(LobbyCodeTextMesh));
+            CoroutineHandler.Instance.NewCoroutine(LobbyCodeTextMesh, LobbyCoroutines.CopyCode(LobbyCodeTextMesh));
         }
     }
 }

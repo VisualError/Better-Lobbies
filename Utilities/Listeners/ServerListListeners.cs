@@ -11,7 +11,7 @@ namespace Better_Lobbies.Utilities.Listeners
             SteamLobbyManager lobbyManager = Object.FindObjectOfType<SteamLobbyManager>();
             if (ulong.TryParse(value, out ulong result))
             {
-                CoroutineHandler.Instance.NewCoroutine(SearchCoroutines.JoinLobby(result, lobbyManager));
+                CoroutineHandler.Instance.NewCoroutine(lobbyManager, SearchCoroutines.JoinLobby(result, lobbyManager));
                 return;
             }
             lobbyManager.LoadServerList();

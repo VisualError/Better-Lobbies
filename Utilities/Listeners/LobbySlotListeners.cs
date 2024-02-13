@@ -10,7 +10,7 @@ namespace Better_Lobbies.Utilities.Listeners
     {
         internal static void CopyLobbyCodeToClipboard(LobbySlot slot, TextMeshProUGUI textMesh)
         {
-            CoroutineHandler.Instance.NewCoroutine(LobbySlotCopyCode(slot, textMesh));
+            CoroutineHandler.Instance.NewCoroutine(slot, LobbySlotCopyCode(slot, textMesh));
         }
 
         internal static IEnumerator LobbySlotCopyCode(LobbySlot slot, TextMeshProUGUI textMesh)
