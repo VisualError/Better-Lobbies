@@ -76,11 +76,14 @@ namespace Better_Lobbies.Patches
         }
 
         // TODO: Stop using GameObject.Find. Either cache the results or find a different way to programatically insert these into the UI.
+        public static GameObject? QuickMenu;
         [HarmonyPatch(typeof(QuickMenuManager), "Start")]
         [HarmonyPostfix]
         private static void QuickMenuStart()
         {
-            GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
+            if (QuickMenu == null)
+                QuickMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/");
+            GameObject? ResumeObj = QuickMenu.transform.Find("MainButtons/Resume/")?.gameObject;
             if (ResumeObj != null && GameObject.Find("CopyLobbyCode") == null)
             {
                 GameObject LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, ResumeObj.transform.parent);
@@ -109,7 +112,7 @@ namespace Better_Lobbies.Patches
 
         private static void AddCrewCount()
         {
-            TextMeshProUGUI CrewHeaderText = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
+            TextMeshProUGUI? CrewHeaderText = GameObject.Find("/PlayerList/Image/Header")?.GetComponentInChildren<TextMeshProUGUI>();
             if (CrewHeaderText != null)
             {
                 CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):";
@@ -118,26 +121,30 @@ namespace Better_Lobbies.Patches
 
         private static void AdjustLobbyCodeButton()
         {
-            GameObject ResumeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/Resume/");
-            GameObject PlayerListObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/PlayerList/");
-            if (ResumeObj != null && PlayerListObj != null)
+            if(QuickMenu == null)
+                QuickMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/");
+            GameObject? ResumeObj = QuickMenu.transform.Find("MainButtons/Resume/")?.gameObject;
+            if (ResumeObj != null)
             {
-                GameObject DebugMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/DebugMenu/");
-                GameObject LobbyCodeObj = DebugMenu.transform.Find("CopyLobbyCode").gameObject;
-                if(LobbyCodeObj == null)
+                GameObject? DebugMenu = QuickMenu.transform.Find("DebugMenu")?.gameObject;
+                GameObject? LobbyCodeObj = DebugMenu?.transform.Find("CopyLobbyCode")?.gameObject;
+                if (LobbyCodeObj == null)
+                    LobbyCodeObj = QuickMenu.transform.Find("MainButtons/CopyLobbyCode/")?.gameObject;
+                RectTransform? rect = LobbyCodeObj?.GetComponent<RectTransform>();
+                if (rect == null)
                 {
-                    LobbyCodeObj = GameObject.Find("/Systems/UI/Canvas/QuickMenu/MainButtons/CopyLobbyCode/");
+                    Plugin.Logger.LogWarning("rect is null wtf");
+                    return;
                 }
-                RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();
                 if (DebugMenu != null && DebugMenu.activeSelf)
                 {
-                    LobbyCodeObj.transform.SetParent(DebugMenu.transform);
+                    LobbyCodeObj?.transform.SetParent(DebugMenu.transform);
                     rect.localPosition = new Vector3(125f, 185f, 0f);
                     rect.localScale = new Vector3(1f, 1f, 1f);
                 }
                 else
                 {
-                    LobbyCodeObj.transform.SetParent(ResumeObj.transform.parent);
+                    LobbyCodeObj?.transform.SetParent(ResumeObj.transform.parent);
                     RectTransform resumeRect = ResumeObj.GetComponent<RectTransform>();
                     rect.localPosition = resumeRect.localPosition + new Vector3(0f, 182f, 0f);
                     rect.localScale = resumeRect.localScale;

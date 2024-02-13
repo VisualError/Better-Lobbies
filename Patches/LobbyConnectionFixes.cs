@@ -77,7 +77,8 @@ namespace Better_Lobbies.Patches
 		static bool ClientDisconnected()
 		{
 			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "ClientDisconnected called!");
-			return true;
+			LobbyPatches.QuickMenu = null;
+            return true;
 		}
 
 
