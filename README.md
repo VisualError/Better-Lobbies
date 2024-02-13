@@ -37,20 +37,28 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - fixed dev menu from [LethalDevMode](https://thunderstore.io/c/lethal-company/p/megumin/LethalDevMode/) and copy lobby code button overlapping each other.
 # Version 1.0.4
 - Added Crew Count ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #4](https://github.com/VisualError/Better-Lobbies/pull/4)
+
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/13612872-1c05-4aa3-b92a-4c722045f98e)
 
 - Fixed Debug Menu Overlapping Player List ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #3](https://github.com/VisualError/Better-Lobbies/pull/3)
+
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/0e7c021f-798b-46b4-9e10-831f111621d4)
+
 # Version 1.0.5
 - Fixed some disconnect reasons being overwritten with "Failed to connect to lobby! Connection was not approved!" ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #7](https://github.com/VisualError/Better-Lobbies/pull/7)
+
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/4c9d0d2e-acf0-45a3-acea-166c50e95723)
+
 - Fixed errors on lobby code ui.
 - Search is no longer case-sensitive.
+
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/6a9c906e-aeac-4f92-b6ed-a65bce9cdba9)
 
 # Version 1.1.0
 - Added: Ability to rejoin last joined lobby.
+
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/80c0fc31-91a3-45f6-ab6d-a37a5596c40b)
+
 - Fixed: Lotsa errors.
 - Changed: The way lobby list loading works.
 
