@@ -6,9 +6,7 @@ using System.Reflection.Emit;
 using System;
 using Unity.Netcode;
 using Steamworks;
-using Object = UnityEngine.Object;
 using Steamworks.Data;
-using BepInEx.Logging;
 
 namespace Better_Lobbies.Patches
 {

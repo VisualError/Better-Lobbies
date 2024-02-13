@@ -1,6 +1,8 @@
 ﻿using Better_Lobbies.Utilities.Listeners;
 using HarmonyLib;
-using System.Collections;
+using Steamworks.Data;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,42 +11,56 @@ namespace Better_Lobbies.Patches
 {
     internal class LobbyPatch
     {
-        [HarmonyPatch(typeof(SteamLobbyManager), "loadLobbyListAndFilter")]
-        [HarmonyPostfix]
-        private static IEnumerator loadLobbyListAndFilter(IEnumerator result)
+        // Taken from https://github.com/MaxWasUnavailable/LobbyCompatibility/blob/master/LobbyCompatibility/Patches/LoadLobbyListAndFilterTranspiler.cs#L22. Slightly modified.
+        [HarmonyPatch(typeof(SteamLobbyManager), nameof(SteamLobbyManager.loadLobbyListAndFilter), MethodType.Enumerator)]
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> loadLobbyListAndFilter_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            SteamLobbyManager lobbyManager = Object.FindFirstObjectByType<SteamLobbyManager>();
-            RectTransform rect = lobbyManager.levelListContainer.GetComponent<RectTransform>();
-            float newWidth = rect.sizeDelta.x;
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, newWidth);
-            float newHeight = Mathf.Max(0, 50 * 42f);
-            rect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
+            var currentLobbyListField =
+            AccessTools.Field(typeof(SteamLobbyManager), nameof(SteamLobbyManager.currentLobbyList));
+            var thisLobbyField =
+                AccessTools.Field(typeof(LobbySlot), nameof(LobbySlot.thisLobby));
 
-            while (result.MoveNext())
-                yield return result.Current;
+            var initializeLobbySlotMethod =
+                AccessTools.Method(typeof(LobbyPatch), nameof(InitializeLobbySlot));
 
-            LobbySlot[] lobbySlots = Object.FindObjectsOfType<LobbySlot>();
-            foreach (LobbySlot lobbySlot in lobbySlots)
+            // Does the following:
+            // - Adds dup before last componentInChildren line to keep componentInChildren value on the stack
+            // - Calls InitializeLobbySlot(lobbySlot)
+            
+            return new CodeMatcher(instructions)
+                .MatchForward(false, new[] {
+                new CodeMatch(OpCodes.Ldloc_1),
+                new CodeMatch(OpCodes.Ldfld, currentLobbyListField),
+                new CodeMatch(OpCodes.Ldarg_0),
+                new CodeMatch(inst => inst.opcode == OpCodes.Ldfld), // Compiler-generated field
+                new CodeMatch(OpCodes.Ldelem, typeof(Lobby)),
+                new CodeMatch(OpCodes.Stfld, thisLobbyField) })
+                .ThrowIfNotMatch("Unable to find LobbySlot.thisLobby line.")
+                .InsertAndAdvance(new[] {
+                new CodeInstruction(OpCodes.Dup) })
+                .Advance(6)
+                .InsertAndAdvance(new[] {
+                new CodeInstruction(OpCodes.Dup),
+                new CodeInstruction(OpCodes.Call, initializeLobbySlotMethod) })
+                .InstructionEnumeration();
+        }
+
+        private void InitializeLobbySlot(LobbySlot lobbySlot)
+        {
+            lobbySlot.playerCount.text = string.Format("{0} / {1}", lobbySlot.thisLobby.MemberCount, lobbySlot.thisLobby.MaxMembers);
+            var JoinButton = lobbySlot.GetComponentInChildren<Button>();
+            if (JoinButton != null)
             {
-                lobbySlot.playerCount.text = string.Format("{0} / {1}", lobbySlot.thisLobby.MemberCount, lobbySlot.thisLobby.MaxMembers);
-
-                GameObject JoinButton = lobbySlot.transform.Find("JoinButton")?.gameObject;
-                if (JoinButton != null)
-                {
-                    GameObject CopyCodeButton = Object.Instantiate(JoinButton, JoinButton.transform.parent);
-                    CopyCodeButton.name = "CopyCodeButton";
-                    RectTransform rectTransform = CopyCodeButton.GetComponent<RectTransform>();
-                    rectTransform!.anchoredPosition -= new Vector2(78f, 0f);
-                    CopyCodeButton.GetComponentInChildren<TextMeshProUGUI>().text = "Code";
-                    Button ButtonComponent = CopyCodeButton.GetComponent<Button>();
-                    ButtonComponent!.onClick = new Button.ButtonClickedEvent();
-                    ButtonComponent!.onClick.AddListener(() => LobbySlotListeners.CopyLobbyCodeToClipboard(lobbySlot));
-                    CopyCodeButton.SetActive(true);
-                }
+                var CopyCodeButton = Object.Instantiate(JoinButton, JoinButton.transform.parent);
+                CopyCodeButton.name = "CopyCodeButton";
+                RectTransform rectTransform = CopyCodeButton.GetComponent<RectTransform>();
+                rectTransform!.anchoredPosition -= new Vector2(78f, 0f);
+                var TextMesh = CopyCodeButton.GetComponentInChildren<TextMeshProUGUI>();
+                TextMesh.text = "Code";
+                CopyCodeButton!.onClick.m_PersistentCalls.Clear();
+                CopyCodeButton!.onClick.AddListener(() => LobbySlotListeners.CopyLobbyCodeToClipboard(lobbySlot, TextMesh));
             }
-
-            newHeight = Mathf.Max(0, lobbySlots.Length * 42f);
-            rect?.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, newHeight);
         }
 
         [HarmonyPatch(typeof(QuickMenuManager), "Start")]
@@ -61,7 +77,7 @@ namespace Better_Lobbies.Patches
                 LobbyCodeTextMesh.text = "> Lobby Code";
 
                 Button LobbyCodeButton = LobbyCodeObj.GetComponent<Button>();
-                LobbyCodeButton.onClick = new Button.ButtonClickedEvent();
+                LobbyCodeButton.onClick.m_PersistentCalls.Clear();
                 LobbyCodeButton.onClick.AddListener(() => MenuLobbyCodeButtonListeners.OnClick(LobbyCodeTextMesh));
 
                 RectTransform rect = LobbyCodeObj.GetComponent<RectTransform>();

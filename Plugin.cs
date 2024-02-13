@@ -35,7 +35,7 @@ namespace Better_Lobbies
             }
             else if(Chainloader.PluginInfos.TryGetValue("Ryokune.CompatibilityChecker", out BepInEx.PluginInfo checker))
             {
-                Logger.Log(LogLevel.All, $"\n{checker.Metadata.Name} v{checker.Metadata.Version} is already installed!\nThis plugin is made by the same developer, and has the same features as Better Servers with an additional mod checking feature.");
+                Logger.Log(LogLevel.All, $"\n{checker.Metadata.Name} v{checker.Metadata.Version} is already installed!\nCompatibility checker *had* the same features as this mod, but is now deprecated, uninstall Compatibility Checker if you want to use a more up-to-date version of Better Lobbies.");
             }
             Harmony.PatchAll(typeof(FixLobbyDataInform)); // Lobby information patch.
             Harmony.PatchAll(typeof(LobbyConnectionFixes)); // Currently all just debugging.
