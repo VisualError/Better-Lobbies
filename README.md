@@ -64,6 +64,10 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 
 - Hopefully fixed from based game: Getting stuck with the fog UI when joining a lobby.
 
+# Version 1.1.1
+- Fixed: Issues with LAN.
+- Disconnect reasons not showing up.
+
 ## Contributing
 ### Template `Better_Lobbies/Better_Lobbies.csproj.user`
 ```xml
