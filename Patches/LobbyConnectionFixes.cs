@@ -24,12 +24,12 @@ namespace Better_Lobbies.Patches
 		{
 			if (NetworkManager.Singleton == null)
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null.");
+				Plugin.Logger.LogInfo("NetworkManager Singleton is set to null.");
 			}
 			List<Friend>? membersList = GameNetworkManager.Instance.currentLobby!.Value.Members?.ToList();
 			if (membersList == null)
 			{
-				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "CurrentLobby members does not exist for some reason.");
+				Plugin.Logger.LogInfo("CurrentLobby members does not exist for some reason.");
 			}
 			return true;
 		}
@@ -57,7 +57,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPostfix]
 		private static void ClientConnect()
 		{
-            Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "ClientConnectCalled");
+            Plugin.Logger.LogInfo("ClientConnectCalled");
 		}
 
 		[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnClientDisconnect))]
@@ -75,17 +75,9 @@ namespace Better_Lobbies.Patches
 			Plugin.Logger.LogWarning(GameNetworkManager.Instance.disconnectReason);
 		}
 
-		/*// Goofy ahh patch. This is here so if the player gets stuck when joining a game (You join and get stuck in a black screen)
-		[HarmonyPatch(typeof(SoundManager), nameof(SoundManager.Update))]
-		[HarmonyPostfix]
-		private static void SoundUpdate()
-		{
-			return; // testing.
-		}*/
-
 		private static void SteamMatchmaking_OnLobbyEntered(Lobby obj)
 		{
-			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Entered lobby successfully!");
+			Plugin.Logger.LogInfo("Entered lobby successfully!");
 			if (NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer) return;
 			previousLobby = obj;
 
@@ -97,21 +89,20 @@ namespace Better_Lobbies.Patches
         {
             if (!response.Approved)
             {
-                Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, $"Connection not approved! {ownerClientId}");
+                Plugin.Logger.LogInfo($"Connection not approved! {ownerClientId}");
             }
             else
             {
-                Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, $"Connection approved! {ownerClientId}");
+                Plugin.Logger.LogInfo($"Connection approved! {ownerClientId}");
             }
             return true;
         }
 
         static IEnumerator shit(ulong ownerClientId)
         {
-            Plugin.Logger.LogWarning("called!");
             if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)) yield break;
             yield return new WaitUntil(() =>  NetworkManager.Singleton.ConnectedClientsIds.Contains(ownerClientId) && NetworkManager.Singleton.ConnectedClients[ownerClientId].IsConnected && StartOfRound.Instance != null);
-            Plugin.Logger.LogWarning("went by!");
+            Plugin.Logger.LogDebug("WaitUntil went by!!");
             StartOfRound.Instance.OnClientConnect(ownerClientId);
             GameNetworkManager.Instance.connectedPlayers++;
             yield break;
@@ -192,7 +183,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool SendConnectionRequest()
 		{
-			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "SendConnectionRequest method called!");
+			Plugin.Logger.LogDebug("SendConnectionRequest method called!");
 			return true;
 		}
 
@@ -200,7 +191,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool ApproveConnection(ref ConnectionRequestMessage connectionRequestMessage, ref NetworkContext context)
 		{
-			Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "Approval called!");
+			Plugin.Logger.LogInfo("Approval called!");
 			return true;
 		}
 
@@ -208,7 +199,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static bool ClientDisconnected(ulong clientId)
 		{
-            Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, $"ClientDisconnected called!, {clientId} {NetworkManager.Singleton.LocalClientId}");
+            Plugin.Logger.LogInfo($"ClientDisconnected called!, {clientId} {NetworkManager.Singleton.LocalClientId}");
 			LobbyPatches.QuickMenu = null;
             return true;
 		}
