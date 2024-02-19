@@ -26,7 +26,7 @@ namespace Better_Lobbies.Patches
 			{
 				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "NetworkManager Singleton is set to null.");
 			}
-			List<Friend> membersList = GameNetworkManager.Instance.currentLobby.Value.Members.ToList();
+			List<Friend>? membersList = GameNetworkManager.Instance.currentLobby!.Value.Members?.ToList();
 			if (membersList == null)
 			{
 				Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "CurrentLobby members does not exist for some reason.");
@@ -47,13 +47,6 @@ namespace Better_Lobbies.Patches
 		{
             NetworkManager.Singleton.OnClientConnectedCallback += Singleton_OnClientConnectedCallback;
         }
-
-		[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnDisable))]
-		[HarmonyPostfix]
-		static void DisconnectOnDisable()
-		{
-			GameNetworkManager.Instance.Disconnect(); // weeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
-		}
 		
 		private static void Singleton_OnClientConnectedCallback(ulong obj)
         {
@@ -67,16 +60,28 @@ namespace Better_Lobbies.Patches
             Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, "ClientConnectCalled");
 		}
 
-        // Goofy ahh patch.
-        [HarmonyPatch(typeof(SoundManager), nameof(SoundManager.Update))]
+		[HarmonyPatch(typeof(StartOfRound), nameof(StartOfRound.OnClientDisconnect))]
+		[HarmonyPrefix]
+		private static void OnClientDisconnect(ulong clientId)
+        {
+            if (clientId == 0 && !StartOfRound.Instance.ClientPlayerList.ContainsKey(clientId)) // If client disconnect is called and the clientid is the hosts, and if the host isnt in the list, then just die.
+            {
+				if (!GameNetworkManager.Instance.isDisconnecting)
+					GameNetworkManager.Instance.disconnectReason = 2; // Connection timed out reason. TODO: Use Enums for disconnect reasons so I can actually identify what each number means lmao
+                    GameNetworkManager.Instance.Disconnect();
+            }
+            Plugin.Logger.LogWarning($"{clientId}, {NetworkManager.Singleton.LocalClientId}");
+			Plugin.Logger.LogWarning(StartOfRound.Instance.ClientPlayerList.ContainsKey(clientId));
+			Plugin.Logger.LogWarning(GameNetworkManager.Instance.disconnectReason);
+		}
+
+		/*// Goofy ahh patch. This is here so if the player gets stuck when joining a game (You join and get stuck in a black screen)
+		[HarmonyPatch(typeof(SoundManager), nameof(SoundManager.Update))]
 		[HarmonyPostfix]
 		private static void SoundUpdate()
 		{
-            if (NetworkManager.Singleton.LocalClientId == 0 && !(NetworkManager.Singleton.IsHost || NetworkManager.Singleton.IsServer))
-            {
-                GameNetworkManager.Instance.Disconnect();
-            }
-        }
+			return; // testing.
+		}*/
 
 		private static void SteamMatchmaking_OnLobbyEntered(Lobby obj)
 		{
@@ -105,7 +110,7 @@ namespace Better_Lobbies.Patches
         {
             Plugin.Logger.LogWarning("called!");
             if (!(NetworkManager.Singleton.IsServer || NetworkManager.Singleton.IsHost)) yield break;
-            yield return new WaitUntil(() => NetworkManager.Singleton.ConnectedClientsIds.Contains(ownerClientId) && NetworkManager.Singleton.ConnectedClients[ownerClientId].IsConnected && StartOfRound.Instance != null);
+            yield return new WaitUntil(() =>  NetworkManager.Singleton.ConnectedClientsIds.Contains(ownerClientId) && NetworkManager.Singleton.ConnectedClients[ownerClientId].IsConnected && StartOfRound.Instance != null);
             Plugin.Logger.LogWarning("went by!");
             StartOfRound.Instance.OnClientConnect(ownerClientId);
             GameNetworkManager.Instance.connectedPlayers++;
@@ -116,7 +121,7 @@ namespace Better_Lobbies.Patches
 		[HarmonyPrefix]
 		static void what()
 		{
-			Plugin.Logger.LogWarning($"{NetworkManager.Singleton.IsListening}");
+			Plugin.Logger.LogWarning($"Is network manager listening: {NetworkManager.Singleton.IsListening}");
 		}
 
         [HarmonyPatch(typeof(GrabbableObject), nameof(GrabbableObject.FallWithCurve))]
@@ -125,16 +130,6 @@ namespace Better_Lobbies.Patches
         {
 			return StartOfRound.Instance != null && StartOfRound.Instance.objectFallToGroundCurve != null && StartOfRound.Instance.objectFallToGroundCurveNoBounce != null;
         }
-
-
-        static IEnumerator fuck2()
-		{
-			yield return new WaitForSeconds(5f);
-			if (GameNetworkManager.Instance.localPlayerController == null && GameNetworkManager.Instance.currentLobby.HasValue)
-			{
-				GameNetworkManager.Instance.currentLobby.Value.Leave();
-			}
-		}
 
 		[HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.ConnectionApproval))]
 		[HarmonyPostfix]
@@ -152,7 +147,10 @@ namespace Better_Lobbies.Patches
 			return false; // Just hook to your own OnClientConnectedCallback event modders. Im too lazy for this.
         }
 
+
+
 		// Me commenting out this transpiler makes me wanna cry sometimes.
+		//
         /*
         [HarmonyPatch(typeof(GameNetworkManager), nameof(GameNetworkManager.Singleton_OnClientConnectedCallback))]
 		[HarmonyTranspiler]
@@ -211,10 +209,6 @@ namespace Better_Lobbies.Patches
 		static bool ClientDisconnected(ulong clientId)
 		{
             Plugin.Logger.Log(BepInEx.Logging.LogLevel.All, $"ClientDisconnected called!, {clientId} {NetworkManager.Singleton.LocalClientId}");
-			/*if(clientId == NetworkManager.Singleton.LocalClientId && GameNetworkManager.Instance.currentLobby.HasValue)
-			{
-                GameNetworkManager.Instance.currentLobby.Value.Leave();
-            } */
 			LobbyPatches.QuickMenu = null;
             return true;
 		}
@@ -229,7 +223,4 @@ namespace Better_Lobbies.Patches
             return true;
 		}
 	}
-
-
-	// Currently all just debugging.
 }

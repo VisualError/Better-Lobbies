@@ -10,7 +10,7 @@ namespace Better_Lobbies.Patches
     [HarmonyPatch(typeof(MenuManager))]
     internal class ServerListPatch
     {
-        internal static TMP_InputField searchInputField;
+        internal static TMP_InputField? searchInputField;
         [HarmonyPatch("Awake")]
         [HarmonyPostfix]
         public static void AwakePatch(ref MenuManager __instance)

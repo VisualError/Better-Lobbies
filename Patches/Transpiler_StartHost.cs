@@ -63,11 +63,6 @@ namespace Better_Lobbies.Patches
                 .RemoveInstruction()
                 .Advance(-1)
                 .RemoveInstruction();
-
-            foreach (var a in codeMatcher.InstructionEnumeration())
-            {
-                Plugin.Logger.LogWarning(a.ToString());
-            }
             return codeMatcher.InstructionEnumeration();
         }
     }

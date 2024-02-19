@@ -44,7 +44,7 @@ namespace Better_Lobbies.Utilities.Listeners
             }
             LobbySlot.JoinLobbyAfterVerifying(lobby, lobby.Id);
             Plugin.Logger.LogWarning($"Successfully joined {lobby.GetData("name") ?? "a lobby"} using lobby code!");
-            ServerListPatch.searchInputField.text = "";
+            ServerListPatch.searchInputField!.text = "";
         }
     }
 }

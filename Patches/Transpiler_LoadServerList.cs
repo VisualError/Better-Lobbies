@@ -44,6 +44,9 @@ namespace Better_Lobbies.Patches
             var FilterWithSearchMethod =
                 AccessTools.Method(typeof(Transpiler_LoadServerList), nameof(FilterAndSortLobbyList));
 
+            // Does the following:
+            // - Finds the field that sets currentLobbyList.
+            // - Calls FilterAndSortLobbyList on the setter.
             var codeMatcher = new CodeMatcher(instructions, ilGenerator);
             codeMatcher
                 .MatchForward(true, [
@@ -61,7 +64,7 @@ namespace Better_Lobbies.Patches
         {
             if (lobbyList == null) return lobbyList;
             var list = lobbyList.ToList();
-            var searchText = ServerListPatch.searchInputField.text;
+            var searchText = ServerListPatch.searchInputField?.text;
             var filteredArray = lobbyList;
             if (!searchText.IsNullOrWhiteSpace()) filteredArray = list.Where(x => x.GetData("name").Contains(searchText, StringComparison.OrdinalIgnoreCase)).ToArray();
             var insertedArray = InsertRejoinLobby(filteredArray); // Do this so you can rejoin private lobbies too.
