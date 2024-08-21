@@ -17,8 +17,6 @@ namespace Better_Lobbies.Patches
         [HarmonyTranspiler]
         private static IEnumerable<CodeInstruction> loadLobbyListAndFilter_Transpiler(IEnumerable<CodeInstruction> instructions)
         {
-            var currentLobbyListField =
-            AccessTools.Field(typeof(SteamLobbyManager), nameof(SteamLobbyManager.currentLobbyList));
             var thisLobbyField =
                 AccessTools.Field(typeof(LobbySlot), nameof(LobbySlot.thisLobby));
 
@@ -32,8 +30,8 @@ namespace Better_Lobbies.Patches
             return new CodeMatcher(instructions)
                 
                 .MatchForward(false, [
-                new CodeMatch(OpCodes.Ldloc_1),
-                new CodeMatch(OpCodes.Ldfld, currentLobbyListField),
+                new CodeMatch(OpCodes.Ldarg_0),
+                new CodeMatch(inst => inst.opcode == OpCodes.Ldfld), // Compiler-generated field
                 new CodeMatch(OpCodes.Ldarg_0),
                 new CodeMatch(inst => inst.opcode == OpCodes.Ldfld), // Compiler-generated field
                 new CodeMatch(OpCodes.Ldelem, typeof(Lobby)),
