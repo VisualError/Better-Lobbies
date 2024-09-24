@@ -37,11 +37,6 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - fixed dev menu from [LethalDevMode](https://thunderstore.io/c/lethal-company/p/megumin/LethalDevMode/) and copy lobby code button overlapping each other.
 # Version 1.0.4
 - Added Crew Count ([@1A3Dev](https://github.com/1A3Dev)) [P.R: #4](https://github.com/VisualError/Better-Lobbies/pull/4)
-# Version 2.0.0
-- Rewrite in MonoMod.
-- Added lobby name to lobby quick menu
-- Added filter for joining via lobby id
-- Copy lobby id now also includes the lobby name in it.
 
 ![image](https://github.com/VisualError/Better-Lobbies/assets/28821360/13612872-1c05-4aa3-b92a-4c722045f98e)
 
@@ -73,28 +68,11 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Fixed: Issues with LAN.
 - Disconnect reasons not showing up.
 
-## Contributing
-### Template `Better_Lobbies/Better_Lobbies.csproj.user`
-```xml
-<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <PropertyGroup>
-    <LETHAL_COMPANY_DIR>C:/Program Files (x86)/Steam/steamapps/common/Lethal Company</LETHAL_COMPANY_DIR>
-    <TEST_PROFILE_DIR>$(APPDATA)/r2modmanPlus-local/LethalCompany/profiles/TestBetterLobbies</TEST_PROFILE_DIR>
-  </PropertyGroup>
-
-    <!-- Create your 'Test Profile' using your modman of choice before enabling this. 
-    Enable by setting the Condition attribute to "true". *nix users should switch out `copy` for `cp`. -->
-    <Target Name="CopyToDebugProfile" AfterTargets="PostBuildEvent" Condition="true">
-		<MakeDir
-                Directories="$(LETHAL_COMPANY_DIR)/BepInEx/plugins/Ryokune-BetterLobbies"
-                Condition="Exists('$(LETHAL_COMPANY_DIR)') And !Exists('$(LETHAL_COMPANY_DIR)/BepInEx/plugins/Ryokune-Better_Lobbies')"
-        />
-		<Copy SourceFiles="$(TargetDir)\$(TargetName).pdb" DestinationFolder="$(LETHAL_COMPANY_DIR)/BepInEx/plugins/Ryokune-Better_Lobbies" />
-		<Exec Command="copy &quot;$(TargetPath)&quot; &quot;$(LETHAL_COMPANY_DIR)/BepInEx/plugins/Ryokune-Better_Lobbies/&quot;" />
-	</Target>
-</Project>
-```
+# Version 2.0.0
+- Rewrite in MonoMod.
+- Added lobby name to lobby quick menu
+- Added filter for joining via lobby id
+- Copy lobby id now also includes the lobby name in it.
 
 ## Contributors
 - [@1A3Dev](https://github.com/1A3Dev)
