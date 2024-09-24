@@ -21,6 +21,8 @@ jobs:
 
       - name: Restore and Build
         run: |
+          dotnet restore --locked-mode
+          dotnet tool restore
           cp src/Better_Lobbies/bin/Release/Better_Lobbies.dll artifacts/tspublish/
 
       - name: Publish to TS
