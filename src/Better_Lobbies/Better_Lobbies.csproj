@@ -31,7 +31,7 @@
     <TestProfileDirectory>$(MODManagerDirectory)/LethalCompany/profiles/Test_$(Product)</TestProfileDirectory>
     <BepInExDirectory>$(TestProfileDirectory)/BepInEx</BepInExDirectory>
     <PluginsDirectory>$(BepInExDirectory)/plugins</PluginsDirectory>
-    <MMHOOK_REFERENCES>$(PluginsDirectory)/MMHOOK</MMHOOK_REFERENCES>
+    <MMHOOK_REFERENCES>$(SolutionDir)/artifacts/tspublish/dist/plugins/MMHOOK</MMHOOK_REFERENCES>
   </PropertyGroup>
 
   <!--
@@ -53,6 +53,7 @@
   <PropertyGroup>
     <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
+
   </Target>
   <Target Name="SetModVersion" BeforeTargets="AddGeneratedFile" AfterTargets="MinVer">
     <PropertyGroup>
@@ -60,6 +61,49 @@
       <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
     </PropertyGroup>
   </Target>
+
+  <Target Name="EnsureLibDir">
+    <MakeDir Directories="../../lib" Condition="!Exists('../../lib')" />
+  </Target>
+
+  <!--
+    Define target dependencies here. 
+  -->
+  
+  <Target Name="FetchMMHook" DependsOnTargets="EnsureLibDir">
+    
+  </Target>
+
+  <!--
+    Below is for fetching dependencies that is defined above. Used for GitHub actions.
+  -->
+  <Target Name="FetchLibs">
+    <CallTarget Targets="FetchMMHook;" />
+  </Target>
+
+  <!--
+      When adding additional references, ensure you use <Private>false</Private> to
+      ensure the DLL is explicitly NOT copied to the output directory. This is because
+      the DLLs are already included in the game and will be loaded from there.
+
+      Further, if the DLL is not included as part of the game, you should be using a
+      Dependency in your thunderstore.toml file to ensure the DLL is available to the
+      game when your mod is loaded.
+
+      Example: <Reference Include="Assembly-CSharp.dll" Private="false" />
+  -->
+
+  <ItemGroup>
+    <Reference 
+      Include="MMHOOK_Assembly-CSharp"
+      HintPath="$(MMHOOK_REFERENCES)\MMHOOK_Assembly-CSharp.dll" 
+      Private="false"
+    />
+  </ItemGroup>
+    
+  <ItemGroup>
+
+  </ItemGroup>
 
   <!--
     Don't mess with anything below this line, it is required to build via 
@@ -95,25 +139,6 @@
       PrivateAssets="all"
       Version="4.*"
     />
-
-    <!--
-      When adding additional references, ensure you use <Private>false</Private> to
-      ensure the DLL is explicitly NOT copied to the output directory. This is because
-      the DLLs are already included in the game and will be loaded from there.
-
-      Further, if the DLL is not included as part of the game, you should be using a
-      Dependency in your thunderstore.toml file to ensure the DLL is available to the
-      game when your mod is loaded.
-
-      Example: <Reference Include="Assembly-CSharp.dll" Private="false" />
-    -->
-
-    <Reference 
-      Include="MMHOOK_Assembly-CSharp"
-      HintPath="$(MMHOOK_REFERENCES)\MMHOOK_Assembly-CSharp.dll" 
-      Private="false"
-    />
-
   </ItemGroup>
 
 </Project>
