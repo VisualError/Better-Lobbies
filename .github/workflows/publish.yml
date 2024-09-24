@@ -21,9 +21,7 @@ jobs:
 
       - name: Restore and Build
         run: |
-          dotnet tool restore
-          dotnet restore
-          dotnet build
+          cp src/Better_Lobbies/bin/Release/Better_Lobbies.dll artifacts/tspublish/dist/plugins/
 
       - name: Publish to TS
         env:
