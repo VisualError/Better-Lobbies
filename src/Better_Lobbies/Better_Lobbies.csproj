@@ -1,0 +1,120 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+
+    <!-- 
+      These were automatically generated for you by the template.
+      You should probably not edit them by hand if you've already published
+      to the Thunderstore.
+    -->
+    <AssemblyName>ryokune.better_lobbies</AssemblyName>
+    <Authors>Ryokune</Authors>
+    <Description>Enhance your multiplayer experience by having additional lobby related QoL features in game!</Description>
+    <Product>Better_Lobbies</Product>
+
+    <!-- 
+      You shouldn't have to change these, but you could if you wanted to.
+    -->
+    <ProjectDepsFileName>$(Product).deps.json</ProjectDepsFileName>
+    <RootNamespace>$(Product)</RootNamespace>
+    <TargetName>$(Product)</TargetName>
+  </PropertyGroup>
+
+  <!--
+    Change the properties here to your personal liking.
+
+    Create your 'Test Profile' using your modman of choice before enabling this.
+    Enable by setting the Condition attribute to "true". *nix users should switch out `copy` for `cp`. 
+  -->
+  <PropertyGroup>
+    <MODManagerDirectory>$(APPDATA)/r2modmanPlus-local</MODManagerDirectory>
+    <TestProfileDirectory>$(MODManagerDirectory)/LethalCompany/profiles/Test_$(Product)</TestProfileDirectory>
+    <BepInExDirectory>$(TestProfileDirectory)/BepInEx</BepInExDirectory>
+    <PluginsDirectory>$(BepInExDirectory)/plugins</PluginsDirectory>
+    <MMHOOK_REFERENCES>$(PluginsDirectory)/MMHOOK</MMHOOK_REFERENCES>
+  </PropertyGroup>
+
+  <!--
+    Everything beyond here requires you to have a mod profile named Test_(ModName) with MMHOOK and BepInEx.
+  -->
+  
+  <Target Name="CopyToTestProfile" AfterTargets="PostBuildEvent" Condition="Exists('$(TestProfileDirectory)')">
+    <MakeDir
+      Directories="$(PluginsDirectory)/$(Product)"
+      Condition="!Exists('$(PluginsDirectory)/$(Product)')"
+    />
+    <Exec 
+		Command="copy &quot;$(TargetPath)&quot; &quot;$(PluginsDirectory)/$(Product)/&quot;"
+	/>
+
+  <!--
+    This target sets up the dll's version automatically using MinVer.
+  -->
+
+  </Target>
+  <Target Name="SetModVersion" BeforeTargets="AddGeneratedFile" AfterTargets="MinVer">
+    <PropertyGroup>
+      <PlainVersion>$(MinVerMajor).$(MinVerMinor).$(MinVerPatch)</PlainVersion>
+      <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
+    </PropertyGroup>
+  </Target>
+  <PropertyGroup>
+	  <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
+  </PropertyGroup>
+
+  <!--
+    Don't mess with anything below this line, it is required to build via 
+    github actions. If you are referencing other DLLs in your project than the
+    base game or unity DLLs they will need to be available via NUGET or copied
+    directly into your repo (which is pretty bad form) to build properly unless
+    they already exist on github in which case you can use submodules to track
+    the reference instead.
+  -->
+
+  <ItemGroup>
+    <PackageReference
+      Include="BepInEx.Analyzers"
+      PrivateAssets="all"
+      Version="1.*"
+    />
+    <PackageReference
+      Include="BepInEx.Core"
+      Version="5.4.*"
+    />
+    <PackageReference 
+      Include="BepInEx.AssemblyPublicizer.MSBuild"
+      PrivateAssets="all"
+      Version="0.4.1"
+    />
+    <PackageReference
+      Include="LethalCompany.GameLibs.Steam"
+      Version="62.0.0-ngd.0"
+      Publicize="true"
+    />
+    <PackageReference 
+      Include="MinVer"
+      PrivateAssets="all"
+      Version="4.*"
+    />
+
+    <!--
+      When adding additional references, ensure you use <Private>false</Private> to
+      ensure the DLL is explicitly NOT copied to the output directory. This is because
+      the DLLs are already included in the game and will be loaded from there.
+
+      Further, if the DLL is not included as part of the game, you should be using a
+      Dependency in your thunderstore.toml file to ensure the DLL is available to the
+      game when your mod is loaded.
+
+      Example: <Reference Include="Assembly-CSharp.dll" Private="false" />
+    -->
+
+    <Reference 
+      Include="MMHOOK_Assembly-CSharp"
+      HintPath="$(MMHOOK_REFERENCES)\MMHOOK_Assembly-CSharp.dll" 
+      Private="False"
+    />
+
+  </ItemGroup>
+
+</Project>
