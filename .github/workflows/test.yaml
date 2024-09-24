@@ -1,0 +1,13 @@
+name: Example Workflow
+
+on: [push]
+
+jobs:
+  example_job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Print workspace path
+        run: echo "Workspace path: $GITHUB_WORKSPACE"
