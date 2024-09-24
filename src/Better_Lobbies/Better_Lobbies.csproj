@@ -31,7 +31,7 @@
     <TestProfileDirectory>$(MODManagerDirectory)/LethalCompany/profiles/Test_$(Product)</TestProfileDirectory>
     <BepInExDirectory>$(TestProfileDirectory)/BepInEx</BepInExDirectory>
     <PluginsDirectory>$(BepInExDirectory)/plugins</PluginsDirectory>
-    <MMHOOK_REFERENCES>$(SolutionDir)/artifacts/tspublish/dist/plugins/MMHOOK</MMHOOK_REFERENCES>
+    <MMHOOK_REFERENCES>$(PluginsDirectory)/MMHOOK</MMHOOK_REFERENCES>
   </PropertyGroup>
 
   <!--
@@ -70,15 +70,15 @@
     Define target dependencies here. 
   -->
   
-  <Target Name="FetchMMHook" DependsOnTargets="EnsureLibDir">
+  <Target Name="FetchSomething" DependsOnTargets="EnsureLibDir">
     
   </Target>
 
   <!--
     Below is for fetching dependencies that is defined above. Used for GitHub actions.
   -->
-  <Target Name="FetchLibs">
-    <CallTarget Targets="FetchMMHook;" />
+  <Target Name="FetchDependencies">
+    
   </Target>
 
   <!--
@@ -93,16 +93,20 @@
       Example: <Reference Include="Assembly-CSharp.dll" Private="false" />
   -->
 
-  <ItemGroup>
+  <ItemGroup Condition="$(CI) != 'true'">
     <Reference 
       Include="MMHOOK_Assembly-CSharp"
       HintPath="$(MMHOOK_REFERENCES)\MMHOOK_Assembly-CSharp.dll" 
-      Private="false"
+      Private="true"
     />
   </ItemGroup>
     
-  <ItemGroup>
-
+  <ItemGroup Condition="$(CI) == 'true'">
+    <Reference 
+      Include="MMHOOK_Assembly-CSharp"
+      HintPath="$(OutputPath)\MMHOOK_Assembly-CSharp.dll" 
+      Private="true"
+    />
   </ItemGroup>
 
   <!--
@@ -115,6 +119,11 @@
   -->
 
   <ItemGroup>
+    <PackageReference
+      Include="MonoMod.RuntimeDetour.HookGen"
+      PrivateAssets="all"
+      Version="20.5.21.5"
+    />
     <PackageReference
       Include="BepInEx.Analyzers"
       PrivateAssets="all"

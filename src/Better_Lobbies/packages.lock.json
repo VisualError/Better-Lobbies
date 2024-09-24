@@ -40,6 +40,24 @@
         "resolved": "4.3.0",
         "contentHash": "YNVAW3loCFW4kTwensApaZUl+7xREK75QQNOFSbsbXx2sCSm9/IHBjUHsJGn3u0UA5r/sAqrdYBNUlOFfLhUrA=="
       },
+      "MonoMod.RuntimeDetour.HookGen": {
+        "type": "Direct",
+        "requested": "[20.5.21.5, )",
+        "resolved": "20.5.21.5",
+        "contentHash": "Zb6Mmj3z+2OdUtSP19tckIvD9411p8v7jzS7JBorVxhkLhsk39EfhrbhmmCT4cX8QKKi5ysYtIZiCnUrGua78A==",
+        "dependencies": {
+          "Mono.Cecil": "0.11.2",
+          "MonoMod": "20.5.21.5",
+          "MonoMod.RuntimeDetour": "20.5.21.5",
+          "MonoMod.Utils": "20.5.21.5",
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.IO.FileSystem.Primitives": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.7.0",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Reflection.TypeExtensions": "4.7.0"
+        }
+      },
       "BepInEx.BaseLib": {
         "type": "Transitive",
         "resolved": "5.4.20",
@@ -68,6 +86,21 @@
         "type": "Transitive",
         "resolved": "0.11.4",
         "contentHash": "IC1h5g0NeJGHIUgzM1P82ld57knhP0IcQfrYITDPXlNpMYGUrsG5TxuaWTjaeqDNQMBDNZkB8L0rBnwsY6JHuQ=="
+      },
+      "MonoMod": {
+        "type": "Transitive",
+        "resolved": "20.5.21.5",
+        "contentHash": "VPFSTuKUaITq6JJpS3vMe1KL9UqJYW6918XXh5H5poTdUQZ6masoVx3VxbEdChzXIKuN8+Q0mAfixoaDF/8OYA==",
+        "dependencies": {
+          "Mono.Cecil": "0.11.2",
+          "MonoMod.Utils": "20.5.21.5",
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.IO.FileSystem.Primitives": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.7.0",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Reflection.TypeExtensions": "4.7.0"
+        }
       },
       "MonoMod.RuntimeDetour": {
         "type": "Transitive",

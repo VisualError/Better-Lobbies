@@ -23,7 +23,7 @@ jobs:
         run: |
           dotnet restore --locked-mode
           dotnet tool restore
-          dotnet build
+          dotnet build -t:FetchDependencies
 
       - name: Publish to TS
         env:

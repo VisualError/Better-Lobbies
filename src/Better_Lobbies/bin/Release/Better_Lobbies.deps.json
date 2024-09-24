@@ -7,13 +7,15 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "ryokune.better_lobbies/0.0.0-dev.45": {
+      "ryokune.better_lobbies/2.0.1-dev.8": {
         "dependencies": {
           "BepInEx.Analyzers": "1.0.8",
           "BepInEx.AssemblyPublicizer.MSBuild": "0.4.1",
           "BepInEx.Core": "5.4.21",
           "LethalCompany.GameLibs.Steam": "62.0.0-ngd.0",
-          "MinVer": "4.3.0"
+          "MinVer": "4.3.0",
+          "MonoMod.RuntimeDetour.HookGen": "20.5.21.5",
+          "MMHOOK_Assembly-CSharp": "0.0.0.0"
         },
         "runtime": {
           "ryokune.better_lobbies.dll": {}
@@ -103,6 +105,24 @@
           }
         }
       },
+      "MonoMod/20.5.21.5": {
+        "dependencies": {
+          "Mono.Cecil": "0.11.4",
+          "MonoMod.Utils": "21.12.13.1",
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.IO.FileSystem.Primitives": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.7.0",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Reflection.TypeExtensions": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MonoMod.dll": {
+            "assemblyVersion": "20.5.21.5",
+            "fileVersion": "20.5.21.5"
+          }
+        }
+      },
       "MonoMod.RuntimeDetour/21.12.13.1": {
         "dependencies": {
           "Mono.Cecil": "0.11.4",
@@ -118,6 +138,26 @@
           "lib/netstandard2.0/MonoMod.RuntimeDetour.dll": {
             "assemblyVersion": "21.12.13.1",
             "fileVersion": "21.12.13.1"
+          }
+        }
+      },
+      "MonoMod.RuntimeDetour.HookGen/20.5.21.5": {
+        "dependencies": {
+          "Mono.Cecil": "0.11.4",
+          "MonoMod": "20.5.21.5",
+          "MonoMod.RuntimeDetour": "21.12.13.1",
+          "MonoMod.Utils": "21.12.13.1",
+          "System.Collections.NonGeneric": "4.3.0",
+          "System.ComponentModel.TypeConverter": "4.3.0",
+          "System.IO.FileSystem.Primitives": "4.3.0",
+          "System.Reflection.Emit.ILGeneration": "4.7.0",
+          "System.Reflection.Emit.Lightweight": "4.7.0",
+          "System.Reflection.TypeExtensions": "4.7.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/MonoMod.RuntimeDetour.HookGen.dll": {
+            "assemblyVersion": "20.5.21.5",
+            "fileVersion": "20.5.21.5"
           }
         }
       },
@@ -661,11 +701,19 @@
             "fileVersion": "0.0.0.0"
           }
         }
+      },
+      "MMHOOK_Assembly-CSharp/0.0.0.0": {
+        "runtime": {
+          "MMHOOK_Assembly-CSharp.dll": {
+            "assemblyVersion": "0.0.0.0",
+            "fileVersion": "0.0.0.0"
+          }
+        }
       }
     }
   },
   "libraries": {
-    "ryokune.better_lobbies/0.0.0-dev.45": {
+    "ryokune.better_lobbies/2.0.1-dev.8": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
@@ -740,12 +788,26 @@
       "path": "mono.cecil/0.11.4",
       "hashPath": "mono.cecil.0.11.4.nupkg.sha512"
     },
+    "MonoMod/20.5.21.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-VPFSTuKUaITq6JJpS3vMe1KL9UqJYW6918XXh5H5poTdUQZ6masoVx3VxbEdChzXIKuN8+Q0mAfixoaDF/8OYA==",
+      "path": "monomod/20.5.21.5",
+      "hashPath": "monomod.20.5.21.5.nupkg.sha512"
+    },
     "MonoMod.RuntimeDetour/21.12.13.1": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-65mB+bHjT6UCGCgO+/pYhpuGPf96rQ1Whwkut/x7cqVIW0DTndDFyWc/3bngzhnY/Y6IYtBMlXsU2ATq+CxpHg==",
       "path": "monomod.runtimedetour/21.12.13.1",
       "hashPath": "monomod.runtimedetour.21.12.13.1.nupkg.sha512"
+    },
+    "MonoMod.RuntimeDetour.HookGen/20.5.21.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-Zb6Mmj3z+2OdUtSP19tckIvD9411p8v7jzS7JBorVxhkLhsk39EfhrbhmmCT4cX8QKKi5ysYtIZiCnUrGua78A==",
+      "path": "monomod.runtimedetour.hookgen/20.5.21.5",
+      "hashPath": "monomod.runtimedetour.hookgen.20.5.21.5.nupkg.sha512"
     },
     "MonoMod.Utils/21.12.13.1": {
       "type": "package",
@@ -956,6 +1018,11 @@
       "sha512": "sha512-sSxqZjd05U0NWlX+eappdlsEuXFvDRHkUaClDVTocGRzCmIwNvgGJIPh22lGklIpNZ3cJZneYJkIUnEIazR8VA==",
       "path": "unityengine.modules/2022.3.9",
       "hashPath": "unityengine.modules.2022.3.9.nupkg.sha512"
+    },
+    "MMHOOK_Assembly-CSharp/0.0.0.0": {
+      "type": "reference",
+      "serviceable": false,
+      "sha512": ""
     }
   }
 }
