@@ -74,5 +74,8 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 - Added filter for joining via lobby id
 - Copy lobby id now also includes the lobby name in it.
 
+  ![image](https://github.com/user-attachments/assets/37b7747c-5db8-4139-bb0d-649aa3e5d329)
+
+
 ## Contributors
 - [@1A3Dev](https://github.com/1A3Dev)
