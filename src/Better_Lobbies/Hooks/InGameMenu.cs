@@ -10,7 +10,7 @@ internal class InGameMenu
   private static GameObject? QuickMenu;
   private static GameObject? DebugMenu;
   private static GameObject? LobbyCodeObj;
-  private static GameObject? ResumeObj;
+  private static GameObject? QuitObj;
   private static TextMeshProUGUI? LobbyCodeTextMesh;
   private static RectTransform? LobbyCodeRect;
   private static RectTransform? ResumeRect;
@@ -52,10 +52,10 @@ internal class InGameMenu
       LobbyCodeRect.localPosition = new Vector3(125f, 185f, 0f);
       LobbyCodeRect.localScale = new Vector3(1f, 1f, 1f);
     }
-    else if (ResumeRect != null && ResumeObj != null)
+    else if (ResumeRect != null && QuitObj != null)
     {
-      LobbyCodeObj?.transform.SetParent(ResumeObj.transform.parent);
-      LobbyCodeRect.localPosition = ResumeRect.localPosition + new Vector3(0f, 182f, 0f);
+      LobbyCodeObj?.transform.SetParent(QuitObj.transform.parent);
+      LobbyCodeRect.localPosition = ResumeRect.localPosition + new Vector3(0f, -55.5941f, 0f);
       LobbyCodeRect.localScale = ResumeRect.localScale;
     }
   }
@@ -67,17 +67,17 @@ internal class InGameMenu
     QuickMenu = GameObject.Find("/Systems/UI/Canvas/QuickMenu/");
     DebugMenu = QuickMenu.transform.Find("DebugMenu")?.gameObject;
 
-    ResumeObj = QuickMenu.transform.Find("MainButtons/Resume/")?.gameObject;
-    if (ResumeObj == null) return;
+    QuitObj = QuickMenu.transform.Find("MainButtons/Quit/")?.gameObject;
+    if (QuitObj == null) return;
 
-    ResumeRect = ResumeObj.GetComponent<RectTransform>();
-    LobbyCodeObj = Object.Instantiate(ResumeObj.gameObject, ResumeObj.transform.parent);
+    ResumeRect = QuitObj.GetComponent<RectTransform>();
+    LobbyCodeObj = Object.Instantiate(QuitObj.gameObject, QuitObj.transform.parent);
     LobbyCodeTextMesh = LobbyCodeObj.GetComponentInChildren<TextMeshProUGUI>();
     Button LobbyCodeButton = LobbyCodeObj.GetComponent<Button>();
 
     LobbyCodeRect = LobbyCodeObj.GetComponent<RectTransform>();
-    LobbyCodeRect.localPosition = ResumeObj.transform.localPosition + new Vector3(0f, 182f, 0f);
-    LobbyCodeRect.localScale = ResumeObj.transform.localScale;
+    LobbyCodeRect.localPosition = QuitObj.transform.localPosition + new Vector3(0f, -55.5941f, 0f);
+    LobbyCodeRect.localScale = QuitObj.transform.localScale;
 
     LobbyCodeButton.onClick.m_PersistentCalls.Clear();
     LobbyCodeButton.onClick.AddListener(() =>
