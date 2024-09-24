@@ -27,7 +27,6 @@ jobs:
 
       - name: Publish to TS
         env:
-          CI: true
           TCLI_AUTH_TOKEN: ${{ secrets.TCLI_AUTH_TOKEN }}
           PACKAGE_VERSION: ${{ github.ref_name }}
         run: |

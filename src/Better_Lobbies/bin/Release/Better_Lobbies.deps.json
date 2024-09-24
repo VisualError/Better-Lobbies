@@ -7,7 +7,7 @@
   "targets": {
     ".NETStandard,Version=v2.1": {},
     ".NETStandard,Version=v2.1/": {
-      "ryokune.better_lobbies/2.0.1-dev.2": {
+      "ryokune.better_lobbies/2.0.1-dev.4": {
         "dependencies": {
           "BepInEx.Analyzers": "1.0.8",
           "BepInEx.AssemblyPublicizer.MSBuild": "0.4.1",
@@ -674,7 +674,7 @@
     }
   },
   "libraries": {
-    "ryokune.better_lobbies/2.0.1-dev.2": {
+    "ryokune.better_lobbies/2.0.1-dev.4": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

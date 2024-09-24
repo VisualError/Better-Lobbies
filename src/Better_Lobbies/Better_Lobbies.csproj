@@ -29,7 +29,7 @@
     <TestProfileDirectory>$(MODManagerDirectory)/LethalCompany/profiles/Test_$(Product)</TestProfileDirectory>
     <BepInExDirectory>$(TestProfileDirectory)/BepInEx</BepInExDirectory>
     <PluginsDirectory>$(BepInExDirectory)/plugins</PluginsDirectory>
-    <MMHOOK_REFERENCES Condition="$(CI) != 'true'">$(PluginsDirectory)/MMHOOK</MMHOOK_REFERENCES>
+    <MMHOOK_REFERENCES Condition="$(CI) != 'true'">$(PluginsDirectory)\MMHOOK</MMHOOK_REFERENCES>
     <MMHOOK_REFERENCES Condition="$(CI) == 'true'">$(OutputPath)</MMHOOK_REFERENCES>
   </PropertyGroup>
 
