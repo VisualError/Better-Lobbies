@@ -21,7 +21,7 @@ jobs:
 
       - name: Restore and Build
         run: |
-          cp src/Better_Lobbies/bin/Release/Better_Lobbies.dll artifacts/tspublish/dist/plugins/
+          cp src/Better_Lobbies/bin/Release/Better_Lobbies.dll artifacts/tspublish/
 
       - name: Publish to TS
         env:
