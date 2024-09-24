@@ -46,7 +46,7 @@ public class Plugin : BaseUnityPlugin
       {
         if (method.GetCustomAttribute<HookInitAttribute>() != null)
         {
-          Log.LogDebug($"Hooking ${type.Name}");
+          Log.LogDebug($"Hooking {type.Name}");
           method.Invoke(null, null);
         }
       }

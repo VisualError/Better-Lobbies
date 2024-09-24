@@ -44,13 +44,15 @@
       Condition="!Exists('$(PluginsDirectory)/$(Product)')"
     />
     <Exec 
-		Command="copy &quot;$(TargetPath)&quot; &quot;$(PluginsDirectory)/$(Product)/&quot;"
-	/>
+        Command="copy &quot;$(TargetPath)&quot; &quot;$(PluginsDirectory)/$(Product)/&quot;"
+    />
 
   <!--
     This target sets up the dll's version automatically using MinVer.
   -->
-
+  <PropertyGroup>
+    <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
+  </PropertyGroup>
   </Target>
   <Target Name="SetModVersion" BeforeTargets="AddGeneratedFile" AfterTargets="MinVer">
     <PropertyGroup>
@@ -58,9 +60,6 @@
       <BepInExPluginVersion>$(PlainVersion)</BepInExPluginVersion>
     </PropertyGroup>
   </Target>
-  <PropertyGroup>
-	  <MinVerMinimumMajorMinor>0.0</MinVerMinimumMajorMinor>
-  </PropertyGroup>
 
   <!--
     Don't mess with anything below this line, it is required to build via 

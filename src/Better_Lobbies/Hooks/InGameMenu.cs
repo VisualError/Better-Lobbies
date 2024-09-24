@@ -40,7 +40,7 @@ internal class InGameMenu
   {
     TextMeshProUGUI? CrewHeaderText = QuickMenu?.transform.Find("PlayerList/Image/Header").GetComponentInChildren<TextMeshProUGUI>();
     if (CrewHeaderText == null) return;
-    CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}):\n{GameNetworkManager.Instance.currentLobby!.Value.GetData("name")}";
+    CrewHeaderText.text = $"CREW ({(StartOfRound.Instance?.connectedPlayersAmount ?? 0) + 1}/{GameNetworkManager.Instance.currentLobby!.Value.MaxMembers}):\n{GameNetworkManager.Instance.currentLobby!.Value.GetData("name")}";
   }
 
   private static void AdjustLobbyCode()
