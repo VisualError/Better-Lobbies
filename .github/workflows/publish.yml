@@ -23,7 +23,7 @@ jobs:
         run: |
           dotnet restore --locked-mode
           dotnet tool restore
-          cp src/Better_Lobbies/bin/Release/Better_Lobbies.dll artifacts/tspublish/
+          dotnet build
 
       - name: Publish to TS
         env:
