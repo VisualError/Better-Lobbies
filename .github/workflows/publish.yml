@@ -31,3 +31,8 @@ jobs:
           PACKAGE_VERSION: ${{ github.ref_name }}
         run: |
           dotnet publish -c Release
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts
+          path: "artifacts/tpublish/build/*.zip"
