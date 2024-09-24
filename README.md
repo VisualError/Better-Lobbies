@@ -1,4 +1,4 @@
-# Better Lobbies
+![image](https://github.com/user-attachments/assets/645fcae9-aba9-4639-af3f-37c08bb754df)# Better Lobbies
 
 ## Overview
 
@@ -78,6 +78,8 @@ If you encounter any issues or have suggestions for improvement, feel free to [r
 
 # Version 2.0.1
 - Fix: changed copy lobby code position in lobby for better accessibility
+![image](https://github.com/user-attachments/assets/c3b432af-3ba5-4d47-a03d-5aa39b952516)
+
 
 
 ## Contributors
