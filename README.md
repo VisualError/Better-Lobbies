@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/645fcae9-aba9-4639-af3f-37c08bb754df)# Better Lobbies
+# Better Lobbies
 
 ## Overview
 
